@@ -1,0 +1,112 @@
+#!/usr/bin/bash
+#
+# dependencies: bash, perl, jq
+##Idea is that a persons github profile repo should be setup with a
+##github action that runs this wakatime-stats repo and this bash script gets
+##executed
+
+##TODO how to get githubs secret repo env variables into bash variable?
+##I guess it is just a normal exported env. variable so this might
+##actually work
+##The user would need to set a github action secret from the profile
+##repos settings and name it 'WAKATIME_API_KEY'
+##
+##TODO how to get jq installed on ubunut-latest from github action? => use
+##docker
+#declare wakaKey="$WAKATIME_API_KEY"
+declare preTemplateFile="$PWD/templates/preTemplateReadme.md.tpl"
+declare dataRaw=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key=$wakaKey | jq '.')
+
+_fetchEditors() {
+  local editorsHTMLBlock="<h4>🔥 Editors:</h4>"
+  echo "$editorsTextBlock"
+}
+  ##FIXME This works only if the textblock is markdown and simple,
+  #however in my case I would also need to use html tags and that is
+  #where it fails
+  ##TODO create a sed command that actually works, or figure out more about perl
+  #perl -0777 -i -pe "s/<!--EDITORS-->/$editorsTextBlock/g" $preTemplateFile > "$PWD/templates/README.md.tpl"
+
+_fetchDataLanguages() {
+  ## For precise processing and printing an array is more useful than just having all
+  ## the data for each language in a variable
+  #
+  
+  ## fetch data as strings per line in a variable
+  local languagesName=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .name')
+  local languagesPercent=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .percent')
+  local languagesText=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .text')
+  ## get the total number of lines for each variable
+  ## since each collection contains the "text" key-value pair it is
+  ##sufficient to only tackle the total number of lines from one key-value
+  ##pair
+  local languagesTextLines=$(echo "$languagesText" | wc -l)
+  ## create empty arrays
+  declare -a languagesNameArray=()
+  local -a languagesPercentArray=()
+  local -a languagesTextArray=()
+  ## fill up the empty arrays while looping over the total amount of
+  ##lines
+  for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
+    languagesNameArray+=( "$(echo "$dataRaw" | jq -r ".data.languages | .[$i] | .name")" )
+    languagesPercentArray+=( "$(echo "$dataRaw" | jq -r ".data.languages | .[$i] | .percent")" )
+    languagesTextArray+=( "$(echo "$dataRaw" | jq -r ".data.languages | .[$i] | .text")" )
+  done
+  _printLanguages
+  #echo ${languagesTextArray[@]}
+  #echo ${languagesTextArray[0]}
+}
+_printLanguages() {
+  local languagesHTMLBlock="<h4>🔥 Languages:</h4>"
+  ##TODO create zet about this solution
+  ##FIXME how to pass variables from one function to another?
+  ##SOLUTION: call function from the other function so it becomes this functions parent:
+  #When local is used within a function, it causes the variable name to have a visible scope restricted to that function and its children.
+  for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
+    echo $i
+    languagesHTMLBlock+="
+<span>"${editorsName[0]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${editorsText[0]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${editorsPercent[0]}"</span>"
+  done
+  ## this loop only works on one array that means for each block I would
+  #need to run 3 loops => too much
+  #for i in "${languagesNameArray[@]}"; do
+  #  echo $i
+  #  languagesHTMLBlock+="
+  #done
+  echo "$languagesHTMLBlock"
+}
+_fetchDataLanguages
+exit
+
+
+##TODO If it finds the <!--EDITORS--> Tag inside the preTemplateReadme
+#execute the function _fetchEditors
+
+##TODO create zet about this echo issue
+#https://www.baeldung.com/linux/variable-preserve-linebreaks
+##FX ONE: to preserve linebreaks you need to use a here-string
+#cat <<<$text
+##FIXME echo removes linebreak, because $IFS includes whitespace:
+##spaces,tabs, newslines
+#echo $text
+##FIX TWO:  the shell treats quoted variables as one single argument.
+
+##TODO The current templates/files are used for testing, later when I
+##I got a docker image and github action I need to implement it in this
+##script so that it actually targets the files in the github profile
+##TODO use jq to get all the data, for every title with some stats that
+##you fetch from wakas api like:
+## Editors, Languages etc. now have a env. variable that people have to place
+## in their preTemplatesReadme.md.tpl wherever they see fit
+##TODO create docker image on hub.docker.com that uses the env. I need to
+##be able to run wakatime-stats
+##TODO create github action that gets listed on marketplace, I guess?
+##Write README.md on how to configure and setup this repo to be able to
+##use it
+##TODO since readme-scribe already uses a template and I can't add
+##any hidden comments because readme-scribe will delete them when it runs.
+##Which in turn willl make direct changes from this script on the readme-scribe template
+##impossible.
+##My idea is to have a pre-template which than writes and updates the
+##readme-scribe template which than runs and updates the real README.md
+##define the pre-template.
