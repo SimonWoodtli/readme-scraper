@@ -43,8 +43,9 @@
   <a href="https://wakatime.com/@SimonWoodtli">
   <img align="center" width="400" height="300" src="https://wakatime.com/share/@SimonWoodtli/ec82b93c-e72b-4bcc-83ed-8f483d24a9ce.svg" />
   </a></p>
-  <!--EDITORS-->
-  <!--LANGUAGES-->
+  <!--foo-start-->
+  <!--foo-end-->
+  
 </details>
 
 <details>

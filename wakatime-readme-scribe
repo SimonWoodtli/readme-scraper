@@ -1,36 +1,20 @@
 #!/usr/bin/bash
-#
-# dependencies: bash, perl, jq
-##Idea is that a persons github profile repo should be setup with a
-##github action that runs this wakatime-stats repo and this bash script gets
-##executed
-
-##TODO how to get githubs secret repo env variables into bash variable?
-##I guess it is just a normal exported env. variable so this might
-##actually work
-##The user would need to set a github action secret from the profile
-##repos settings and name it 'WAKATIME_API_KEY'
-##
-##TODO how to get jq installed on ubunut-latest from github action? => use
-##docker
-#declare wakaKey="$WAKATIME_API_KEY"
+source api-key #temporary for testing the script
+# dependencies: bash, perl|sed, jq
 declare preTemplateFile="$PWD/templates/preTemplateReadme.md.tpl"
+declare templateFile="$PWD/templates/README.md.tpl"
 declare dataRaw=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key=$wakaKey | jq '.')
+#declare back='\\'
 
-_fetchEditors() {
-  local editorsHTMLBlock="<h4>🔥 Editors:</h4>"
-  echo "$editorsTextBlock"
-}
-  ##FIXME This works only if the textblock is markdown and simple,
-  #however in my case I would also need to use html tags and that is
-  #where it fails
-  ##TODO create a sed command that actually works, or figure out more about perl
-  #perl -0777 -i -pe "s/<!--EDITORS-->/$editorsTextBlock/g" $preTemplateFile > "$PWD/templates/README.md.tpl"
+##FIXME This works only if the textblock is markdown and simple,
+#however in my case I would also need to use html tags and that is
+#where it fails
+##TODO create a sed command that actually works, or figure out more about perl
+#perl -0777 -i -pe "s/<!--EDITORS-->/$editorsTextBlock/g" $preTemplateFile > "$PWD/templates/README.md.tpl"
 
 _fetchDataLanguages() {
   ## For precise processing and printing an array is more useful than just having all
   ## the data for each language in a variable
-  #
   
   ## fetch data as strings per line in a variable
   local languagesName=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .name')
@@ -50,47 +34,92 @@ _fetchDataLanguages() {
   for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
     languagesNameArray+=( "$(echo "$dataRaw" | jq -r ".data.languages | .[$i] | .name")" )
     languagesPercentArray+=( "$(echo "$dataRaw" | jq -r ".data.languages | .[$i] | .percent")" )
-    languagesTextArray+=( "$(echo "$dataRaw" | jq -r ".data.languages | .[$i] | .text")" )
+    languagesTextArray+=( "$(echo "$dataRaw" | jq  -r ".data.languages | .[$i] | .text")" )
   done
-  _printLanguages
+  _printDataLanguages
   #echo ${languagesTextArray[@]}
   #echo ${languagesTextArray[0]}
 }
-_printLanguages() {
-  local languagesHTMLBlock="<h4>🔥 Languages:</h4>"
-  ##TODO create zet about this solution
-  ##FIXME how to pass variables from one function to another?
-  ##SOLUTION: call function from the other function so it becomes this functions parent:
-  #When local is used within a function, it causes the variable name to have a visible scope restricted to that function and its children.
+_printDataLanguages() {
+  local languagesHtmlBlock="<h4>🔥 Languages:</h4>"
+  #local backslash="\\\"
   for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
-    echo $i
-    languagesHTMLBlock+="
-<span>"${editorsName[0]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${editorsText[0]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${editorsPercent[0]}"</span>"
+    #echo $i
+    languagesHtmlBlock+="
+<span>"${languagesNameArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesTextArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesPercentArray[$i]}%"</span>"
+    #sed -i ""$detectLineNum"i This is Line: "$detectLineNum"" "$preTemplateFile"
+    ## Remember: Variables and sed are a bit tricky. Don't quote variables that have spaces!
+    #https://stackoverflow.com/questions/49461777/sed-with-variables-and-spaces
+    ## working:
+    #sed -i "${detectLineNum}i hasdfl ${languagesTextArray[$i]} hasdfas" "$preTemplateFile"
+    #perl -0777 -pi -e "s/<!--LANGUAGES-->/${languagesTextArray[$i]}/g" $preTemplateFile > "$templateFile"
+    #sed -i "${detectLineNum}i <span>"${languagesNameArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesTextArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesPercentArray[$i]}%"</span>" "$preTemplateFile"
+    #echo "${languagesTextArray[0]}"
   done
+  ##SOLUTION!!! https://stackoverflow.com/questions/67929263/inserting-contents-of-one-text-file-into-another-in-bash
+  ## Im no't too proud for having to use a buffer file, but sed with multi
+  #line strings is a pain, and learning perl takes too much time -> gotta finish this project!
+  ##TODO maybe I can use the mktemp command to create a temp file gotta
+  ## figure out once this is in a docker container
+  echo "$languagesHtmlBlock" > buffer
+  ## add new api content to preTemplateFile
+  printf "%s\n" "/<!--foo-start-->/r buffer" w  | ed -s $preTemplateFile
+  ## update new api content into templateFile
+  cat $preTemplateFile > $templateFile
+
+  ##TODO create new function to edit templateFile (remove html comment) and preTemplateFile (remove content)
+  ## store line number from start/end tag
+  local -i detectTagStart=$(grep -n '<!--foo-start-->' "$preTemplateFile" | cut --characters=1,2)
+  local -i detectTagEnd=$(grep -n '<!--foo-end-->' "$preTemplateFile" | cut --characters=1,2)
+  ## delete html comment tags from templateFile
+  sed -i "${detectTagStart}d;${detectTagEnd}d" "$templateFile"
+  ## adjust num to match content
+  ((detectTagStart=detectTagStart+1))
+  ((detectTagEnd=detectTagEnd-1))
+  ## delete content between html comment tags from preTemplateFile
+  sed -i "$detectTagStart,${detectTagEnd}d" $preTemplateFile
+  #sed -i "${detectTagStart}i \\" "$templateFile"
+
+  
   ## this loop only works on one array that means for each block I would
   #need to run 3 loops => too much
   #for i in "${languagesNameArray[@]}"; do
   #  echo $i
-  #  languagesHTMLBlock+="
+  #  languagesHtmlBlock+="
   #done
-  echo "$languagesHTMLBlock"
+  ## multiline variables need to be escaped: (this two lines kinda work)
+  #local variableEscapedForSed=${languagesHtmlBlock//$'\n'/\\$'\n'}
+  #sed -i "s|<!--LANGUAGES-->|"$testEscapedForSed"|g" "$preTemplateFile"
+  #sed -i "s|<!--LANGUAGES-->|$languagesHtmlBlock|g" "$preTemplateFile"
+  #echo "$preTemplateFile" | grep -n '<!--LANGUAGES-->'
+  ## create templateFile
+  #cat "$preTemplateFile" > "$templateFile"
+  #sed -i "${detectLineNum}i $languagesHtmlBlock" "$preTemplateFile"
+
+  #sed -i "${i} This is a test at line:" "$preTemplateFile"
+ 
+  #sed -n -e "/<!--LANGUAGES-->/p" "$preTemplateFile"
+  #perl -0777 -i -pe "s/<!--LANGUAGES-->/$languagesHtmlBlock/g" $preTemplateFile > "$PWD/templates/README.md.tpl"
+
+  #echo "$languagesHtmlBlock"
 }
+##TODO If it finds the <!--LANGUAGES--> Tag inside the preTemplateReadme
+#execute the function _fetchDataLanguages
 _fetchDataLanguages
+echo "" > "$PWD/buffer"
 exit
 
-
-##TODO If it finds the <!--EDITORS--> Tag inside the preTemplateReadme
-#execute the function _fetchEditors
-
-##TODO create zet about this echo issue
-#https://www.baeldung.com/linux/variable-preserve-linebreaks
-##FX ONE: to preserve linebreaks you need to use a here-string
-#cat <<<$text
-##FIXME echo removes linebreak, because $IFS includes whitespace:
-##spaces,tabs, newslines
-#echo $text
-##FIX TWO:  the shell treats quoted variables as one single argument.
-
+##TODO The idea for this repo is that a persons github profile repo should be setup with a
+##github action that runs this wakatime-stats repo and this bash script gets
+##executed
+##TODO how to get githubs secret repo env variables into bash variable?
+##I guess it is just a normal exported env. variable so this might
+##actually work
+##The user would need to set a github action secret from the profile
+##repos settings and name it 'WAKATIME_API_KEY'
+##TODO how to get jq installed on ubunut-latest from github action? => use
+##docker
+#declare wakaKey="$WAKATIME_API_KEY"
 ##TODO The current templates/files are used for testing, later when I
 ##I got a docker image and github action I need to implement it in this
 ##script so that it actually targets the files in the github profile
