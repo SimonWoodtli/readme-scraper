@@ -1,35 +1,41 @@
 #!/usr/bin/bash
-source api-key #temporary for testing the script
+source api-key #Temporary for testing the script
 # dependencies: bash, perl|sed, jq
 declare preTemplateFile="$PWD/templates/preTemplateReadme.md.tpl"
 declare templateFile="$PWD/templates/README.md.tpl"
 declare dataRaw=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key=$wakaKey | jq '.')
-#declare back='\\'
 
-##FIXME This works only if the textblock is markdown and simple,
-#however in my case I would also need to use html tags and that is
-#where it fails
-##TODO create a sed command that actually works, or figure out more about perl
-#perl -0777 -i -pe "s/<!--EDITORS-->/$editorsTextBlock/g" $preTemplateFile > "$PWD/templates/README.md.tpl"
+_main() {
+  ##TODO Find all the html comment tags and put them in an array. 
+  #execute the function _fetchDataLanguages and add the keyword to the
+  #comment array
+ 
+  ## This should be an empty array. Added elements just for testing
+  local -a comments=( "languages" )
+  #commentArray+=""
+  _fetchDataLanguages
+}
 
 _fetchDataLanguages() {
+  ## TODO make _fetchDataLanguages to generic _fetchData and grab all the
+  ## data strings that are defined in the comment array
   ## For precise processing and printing an array is more useful than just having all
   ## the data for each language in a variable
   
-  ## fetch data as strings per line in a variable
+  ## Fetch data as strings per line in a variable
   local languagesName=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .name')
   local languagesPercent=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .percent')
   local languagesText=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .text')
-  ## get the total number of lines for each variable
-  ## since each collection contains the "text" key-value pair it is
+  ## Get the total number of lines for each variable
+  ## Since each collection contains the "text" key-value pair it is
   ##sufficient to only tackle the total number of lines from one key-value
   ##pair
   local languagesTextLines=$(echo "$languagesText" | wc -l)
-  ## create empty arrays
+  ## Create empty arrays
   declare -a languagesNameArray=()
   local -a languagesPercentArray=()
   local -a languagesTextArray=()
-  ## fill up the empty arrays while looping over the total amount of
+  ## Fill up the empty arrays while looping over the total amount of
   ##lines
   for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
     languagesNameArray+=( "$(echo "$dataRaw" | jq -r ".data.languages | .[$i] | .name")" )
@@ -41,98 +47,88 @@ _fetchDataLanguages() {
   #echo ${languagesTextArray[0]}
 }
 _printDataLanguages() {
+  ## TODO make _printDataLanguages to generic _printData and print all the
+  ## Data strings that are defined in the comment array
   local languagesHtmlBlock="<h4>🔥 Languages:</h4>"
   #local backslash="\\\"
   for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
     #echo $i
     languagesHtmlBlock+="
 <span>"${languagesNameArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesTextArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesPercentArray[$i]}%"</span>"
-    #sed -i ""$detectLineNum"i This is Line: "$detectLineNum"" "$preTemplateFile"
-    ## Remember: Variables and sed are a bit tricky. Don't quote variables that have spaces!
-    #https://stackoverflow.com/questions/49461777/sed-with-variables-and-spaces
-    ## working:
-    #sed -i "${detectLineNum}i hasdfl ${languagesTextArray[$i]} hasdfas" "$preTemplateFile"
-    #perl -0777 -pi -e "s/<!--LANGUAGES-->/${languagesTextArray[$i]}/g" $preTemplateFile > "$templateFile"
-    #sed -i "${detectLineNum}i <span>"${languagesNameArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesTextArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesPercentArray[$i]}%"</span>" "$preTemplateFile"
-    #echo "${languagesTextArray[0]}"
   done
   ##SOLUTION!!! https://stackoverflow.com/questions/67929263/inserting-contents-of-one-text-file-into-another-in-bash
   ## Im no't too proud for having to use a buffer file, but sed with multi
   #line strings is a pain, and learning perl takes too much time -> gotta finish this project!
-  ##TODO maybe I can use the mktemp command to create a temp file gotta
+  ##TODO Maybe I can use the mktemp command to create a temp file gotta
   ## figure out once this is in a docker container
   echo "$languagesHtmlBlock" > buffer
-  ## add new api content to preTemplateFile
-  printf "%s\n" "/<!--foo-start-->/r buffer" w  | ed -s $preTemplateFile
-  ## update new api content into templateFile
+  ## Add new api content to preTemplateFile
+  printf "%s\n" "/<!--languages-start-->/r buffer" w  | ed -s $preTemplateFile
+  ## Update new api content into templateFile
   cat $preTemplateFile > $templateFile
-
-  ##TODO create new function to edit templateFile (remove html comment) and preTemplateFile (remove content)
-  ## store line number from start/end tag
-  local -i detectTagStart=$(grep -n '<!--foo-start-->' "$preTemplateFile" | cut --characters=1,2)
-  local -i detectTagEnd=$(grep -n '<!--foo-end-->' "$preTemplateFile" | cut --characters=1,2)
-  ## delete html comment tags from templateFile
-  sed -i "${detectTagStart}d;${detectTagEnd}d" "$templateFile"
-  ## adjust num to match content
-  ((detectTagStart=detectTagStart+1))
-  ((detectTagEnd=detectTagEnd-1))
-  ## delete content between html comment tags from preTemplateFile
-  sed -i "$detectTagStart,${detectTagEnd}d" $preTemplateFile
-  #sed -i "${detectTagStart}i \\" "$templateFile"
-
-  
-  ## this loop only works on one array that means for each block I would
-  #need to run 3 loops => too much
-  #for i in "${languagesNameArray[@]}"; do
-  #  echo $i
-  #  languagesHtmlBlock+="
-  #done
-  ## multiline variables need to be escaped: (this two lines kinda work)
-  #local variableEscapedForSed=${languagesHtmlBlock//$'\n'/\\$'\n'}
-  #sed -i "s|<!--LANGUAGES-->|"$testEscapedForSed"|g" "$preTemplateFile"
-  #sed -i "s|<!--LANGUAGES-->|$languagesHtmlBlock|g" "$preTemplateFile"
-  #echo "$preTemplateFile" | grep -n '<!--LANGUAGES-->'
-  ## create templateFile
-  #cat "$preTemplateFile" > "$templateFile"
-  #sed -i "${detectLineNum}i $languagesHtmlBlock" "$preTemplateFile"
-
-  #sed -i "${i} This is a test at line:" "$preTemplateFile"
- 
-  #sed -n -e "/<!--LANGUAGES-->/p" "$preTemplateFile"
-  #perl -0777 -i -pe "s/<!--LANGUAGES-->/$languagesHtmlBlock/g" $preTemplateFile > "$PWD/templates/README.md.tpl"
-
-  #echo "$languagesHtmlBlock"
+  _cleanUpBuffer
+  _cleanUpTemplates
 }
-##TODO If it finds the <!--LANGUAGES--> Tag inside the preTemplateReadme
-#execute the function _fetchDataLanguages
-_fetchDataLanguages
-echo "" > "$PWD/buffer"
-exit
+
+_cleanUpTemplates() {
+  ## Function to edit templateFile (remove html comment) and preTemplateFile (remove content)
+  ## store line number from start/end tag
+  local -i detectTagStart
+  local -i detectTagEnd
+  
+  ## Loop over comment array and for earch comment
+  for comment in "${comments[@]}"; do
+    # Grab html comment start and finish line number
+    echo $comment
+    detectTagStart=$(grep -n '<!--'"$comment"'-start-->' "$preTemplateFile" | cut --characters=1,2)
+    detectTagEnd=$(grep -n '<!--'"$comment"'-end-->' "$preTemplateFile" | cut --characters=1,2)
+    ## If detectTagStart gives back 0 skip sed commands
+    if [[ $detectTagStart -ne 0 && $detectTagEnd -ne 0 ]]; then
+      ## Delete html comment tags from templateFile
+      sed -i "${detectTagStart}d;${detectTagEnd}d" "$templateFile"
+      ## Adjust num to match content
+      ((detectTagStart=detectTagStart+1))
+      ((detectTagEnd=detectTagEnd-1))
+      ## Delete content between html comment tags from preTemplateFile
+      sed -i "$detectTagStart,${detectTagEnd}d" $preTemplateFile
+    fi
+  done
+}
+
+_cleanUpBuffer() {
+  ## TODO Find a better command to clean buffer file
+  echo "" > "$PWD/buffer"
+}
+
+_main
+
+## Remember: Variables and sed are a bit tricky. Don't quote variables that have spaces!
+#https://stackoverflow.com/questions/49461777/sed-with-variables-and-spaces
 
 ##TODO The idea for this repo is that a persons github profile repo should be setup with a
 ##github action that runs this wakatime-stats repo and this bash script gets
 ##executed
-##TODO how to get githubs secret repo env variables into bash variable?
+##TODO How to get githubs secret repo env variables into bash variable?
 ##I guess it is just a normal exported env. variable so this might
 ##actually work
 ##The user would need to set a github action secret from the profile
 ##repos settings and name it 'WAKATIME_API_KEY'
-##TODO how to get jq installed on ubunut-latest from github action? => use
+##TODO How to get jq installed on ubunut-latest from github action? => use
 ##docker
 #declare wakaKey="$WAKATIME_API_KEY"
 ##TODO The current templates/files are used for testing, later when I
 ##I got a docker image and github action I need to implement it in this
 ##script so that it actually targets the files in the github profile
-##TODO use jq to get all the data, for every title with some stats that
+##TODO Use jq to get all the data, for every title with some stats that
 ##you fetch from wakas api like:
 ## Editors, Languages etc. now have a env. variable that people have to place
 ## in their preTemplatesReadme.md.tpl wherever they see fit
-##TODO create docker image on hub.docker.com that uses the env. I need to
+##TODO Create docker image on hub.docker.com that uses the env. I need to
 ##be able to run wakatime-stats
-##TODO create github action that gets listed on marketplace, I guess?
+##TODO Create github action that gets listed on marketplace, I guess?
 ##Write README.md on how to configure and setup this repo to be able to
 ##use it
-##TODO since readme-scribe already uses a template and I can't add
+##TODO Since readme-scribe already uses a template and I can't add
 ##any hidden comments because readme-scribe will delete them when it runs.
 ##Which in turn willl make direct changes from this script on the readme-scribe template
 ##impossible.

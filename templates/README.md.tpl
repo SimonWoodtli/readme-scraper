@@ -44,18 +44,20 @@
   <img align="center" width="400" height="300" src="https://wakatime.com/share/@SimonWoodtli/ec82b93c-e72b-4bcc-83ed-8f483d24a9ce.svg" />
   </a></p>
 <h4>🔥 Languages:</h4>
-<span>Markdown</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>8 hrs 50 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>42.82%</span>
-<span>sh</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>6 hrs 42 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>32.51%</span>
-<span>Smarty</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 hrs 2 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9.88%</span>
-<span>YAML</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr 6 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>5.38%</span>
-<span>Vim Script</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>46 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.76%</span>
-<span>Bash</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>45 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.67%</span>
-<span>Other</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>7 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.6%</span>
-<span>Perl</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>7 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.59%</span>
-<span>JSON</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>4 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.35%</span>
-<span>gitignore</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.24%</span>
-<span>conf</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 min</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.1%</span>
-<span>dircolors</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 min</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.09%</span>
+<span>sh</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9 hrs 35 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>37.44%</span>
+<span>Markdown</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9 hrs 16 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>36.22%</span>
+<span>Smarty</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3 hrs 10 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>12.39%</span>
+<span>YAML</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr 6 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>4.34%</span>
+<span>Bash</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>54 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.56%</span>
+<span>Vim Script</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>52 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.41%</span>
+<span>Other</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>22 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1.44%</span>
+<span>Perl</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>7 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.47%</span>
+<span>JSON</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>4 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.29%</span>
+<span>gitignore</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.19%</span>
+<span>gitconfig</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 min</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.09%</span>
+<span>conf</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 min</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.08%</span>
+<span>dircolors</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 min</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.07%</span>
+<span>Text</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.01%</span>
 <span>XML</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.01%</span>
   
 </details>
