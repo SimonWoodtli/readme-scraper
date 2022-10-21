@@ -1,46 +1,68 @@
 #!/usr/bin/bash
 source api-key #Temporary for testing the script
-# dependencies: bash, perl|sed, jq
-declare preTemplateFile="$PWD/templates/preTemplateReadme.md.tpl"
-declare templateFile="$PWD/templates/README.md.tpl"
-declare dataRaw=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key=$wakaKey | jq '.')
+# dependencies: bash, sed, jq, printf, ed
 
 _main() {
-  ##TODO Find all the html comment tags and put them in an array. 
-  #execute the function _fetchDataLanguages and add the keyword to the
-  #comment array
- 
-  ## This should be an empty array. Added elements just for testing
-  local -a comments=( "languages" )
-  #commentArray+=""
+  local preTemplateFile="$PWD/templates/preTemplateReadme.md.tpl"
+  local templateFile="$PWD/templates/README.md.tpl"
+  local fetchWakaData
+  fetchWakaData=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
+  ## Find all the html comment tags and put them in an array. 
+  local -a findComments=( "anguages" "editors" "os" "projects" "timezone")
+  local -a foundComments=()
+  local -i checkCommentStartLine
+  local -i checkCommentEndLine
+
+  ## Loop over all possible comments from findComments and check if they
+  ## can be found in preTemplateFile, if yes add them to foundComments
+  for findComment in "${findComments[@]}"; do
+    checkCommentStartLine=$(grep -n '<!--'"$findComment"'-start-->' "$preTemplateFile" | cut --characters=1,2)
+    checkCommentEndLine=$(grep -n '<!--'"$findComment"'-end-->' "$preTemplateFile" | cut --characters=1,2)
+    if [[ $checkCommentStartLine -ne 0 && $checkCommentEndLine -ne 0 ]]; then
+      foundComments+=( "$findComment" )
+    fi
+  done
+  [[ -n $foundComments ]] || exit 1
+
   _fetchDataLanguages
 }
 
 _fetchDataLanguages() {
+  ## create variables and arrays
+  local languagesName
+  local languagesPercent
+  local languagesText
+  local languagesNameLines
+  local languagesPercentLines
+  local languagesTextLines
+  local -a languagesNameArray=()
+  local -a languagesPercentArray=()
+  local -a languagesTextArray=()
   ## TODO make _fetchDataLanguages to generic _fetchData and grab all the
   ## data strings that are defined in the comment array
   ## For precise processing and printing an array is more useful than just having all
   ## the data for each language in a variable
   
+  ## TODO If it can't find any data because the user was inactive make
+  ## sure a inactive() function gets triggered that prints this inactivity
   ## Fetch data as strings per line in a variable
-  local languagesName=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .name')
-  local languagesPercent=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .percent')
-  local languagesText=$(echo "$dataRaw" | jq -r '.data.languages | .[] | .text')
+  languagesName=$(echo "$fetchWakaData" | jq -r '.data.languages | .[] | .name')
+  languagesPercent=$(echo "$fetchWakaData" | jq -r '.data.languages | .[] | .percent')
+  languagesText=$(echo "$fetchWakaData" | jq -r '.data.languages | .[] | .text')
   ## Get the total number of lines for each variable
   ## Since each collection contains the "text" key-value pair it is
   ##sufficient to only tackle the total number of lines from one key-value
   ##pair
-  local languagesTextLines=$(echo "$languagesText" | wc -l)
-  ## Create empty arrays
-  declare -a languagesNameArray=()
-  local -a languagesPercentArray=()
-  local -a languagesTextArray=()
+  languagesNameLines=$(echo "$languagesName" | wc -l)
+  languagesPercentLines=$(echo "$languagesPercent" | wc -l)
+  languagesTextLines=$(echo "$languagesText" | wc -l)
+  [[ "$languagesNameLines" == "$languagesPercentLines" && "$languagesNameLines" == "$languagesTextLines" ]] || exit 2
   ## Fill up the empty arrays while looping over the total amount of
   ##lines
   for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
-    languagesNameArray+=( "$(echo "$dataRaw" | jq -r ".data.languages | .[$i] | .name")" )
-    languagesPercentArray+=( "$(echo "$dataRaw" | jq -r ".data.languages | .[$i] | .percent")" )
-    languagesTextArray+=( "$(echo "$dataRaw" | jq  -r ".data.languages | .[$i] | .text")" )
+    languagesNameArray+=( "$(echo "$fetchWakaData" | jq -r ".data.languages | .[$i] | .name")" )
+    languagesPercentArray+=( "$(echo "$fetchWakaData" | jq -r ".data.languages | .[$i] | .percent")" )
+    languagesTextArray+=( "$(echo "$fetchWakaData" | jq  -r ".data.languages | .[$i] | .text")" )
   done
   _printDataLanguages
   #echo ${languagesTextArray[@]}
@@ -49,12 +71,12 @@ _fetchDataLanguages() {
 _printDataLanguages() {
   ## TODO make _printDataLanguages to generic _printData and print all the
   ## Data strings that are defined in the comment array
-  local languagesHtmlBlock="<h4>🔥 Languages:</h4>"
+  local languagesHtmlBlock='<h4>🔥 Languages:</h4>'
   #local backslash="\\\"
   for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
     #echo $i
-    languagesHtmlBlock+="
-<span>"${languagesNameArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesTextArray[$i]}"</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>"${languagesPercentArray[$i]}%"</span>"
+    languagesHtmlBlock+='
+<span>'"${languagesNameArray[$i]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${languagesTextArray[$i]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${languagesPercentArray[$i]}%"'</span>'
   done
   ##SOLUTION!!! https://stackoverflow.com/questions/67929263/inserting-contents-of-one-text-file-into-another-in-bash
   ## Im no't too proud for having to use a buffer file, but sed with multi
@@ -63,9 +85,9 @@ _printDataLanguages() {
   ## figure out once this is in a docker container
   echo "$languagesHtmlBlock" > buffer
   ## Add new api content to preTemplateFile
-  printf "%s\n" "/<!--languages-start-->/r buffer" w  | ed -s $preTemplateFile
+  printf "%s\n" "/<!--languages-start-->/r buffer" w  | ed -s "$preTemplateFile"
   ## Update new api content into templateFile
-  cat $preTemplateFile > $templateFile
+  cat "$preTemplateFile" > "$templateFile"
   _cleanUpBuffer
   _cleanUpTemplates
 }
@@ -73,24 +95,24 @@ _printDataLanguages() {
 _cleanUpTemplates() {
   ## Function to edit templateFile (remove html comment) and preTemplateFile (remove content)
   ## store line number from start/end tag
-  local -i detectTagStart
-  local -i detectTagEnd
+  local -i findCommentStartLine
+  local -i findCommentEndLine
   
   ## Loop over comment array and for earch comment
-  for comment in "${comments[@]}"; do
+  for foundComment in "${foundComments[@]}"; do
     # Grab html comment start and finish line number
-    echo $comment
-    detectTagStart=$(grep -n '<!--'"$comment"'-start-->' "$preTemplateFile" | cut --characters=1,2)
-    detectTagEnd=$(grep -n '<!--'"$comment"'-end-->' "$preTemplateFile" | cut --characters=1,2)
-    ## If detectTagStart gives back 0 skip sed commands
-    if [[ $detectTagStart -ne 0 && $detectTagEnd -ne 0 ]]; then
+    #echo $foundComment
+    findCommentStartLine=$(grep -n '<!--'"$foundComment"'-start-->' "$preTemplateFile" | cut --characters=1,2)
+    findCommentEndLine=$(grep -n '<!--'"$foundComment"'-end-->' "$preTemplateFile" | cut --characters=1,2)
+    ## If findCommentStartLine gives back 0 skip sed commands
+    if [[ $findCommentStartLine -ne 0 && $findCommentEndLine -ne 0 ]]; then
       ## Delete html comment tags from templateFile
-      sed -i "${detectTagStart}d;${detectTagEnd}d" "$templateFile"
+      sed -i "${findCommentStartLine}d;${findCommentEndLine}d" "$templateFile"
       ## Adjust num to match content
-      ((detectTagStart=detectTagStart+1))
-      ((detectTagEnd=detectTagEnd-1))
+      ((findCommentStartLine=findCommentStartLine+1))
+      ((findCommentEndLine=findCommentEndLine-1))
       ## Delete content between html comment tags from preTemplateFile
-      sed -i "$detectTagStart,${detectTagEnd}d" $preTemplateFile
+      sed -i "$findCommentStartLine,${findCommentEndLine}d" "$preTemplateFile"
     fi
   done
 }
@@ -104,6 +126,9 @@ _main
 
 ## Remember: Variables and sed are a bit tricky. Don't quote variables that have spaces!
 #https://stackoverflow.com/questions/49461777/sed-with-variables-and-spaces
+##TODO ADDITIONAL: Add the github api and have some queries about github stats: replace all the functions I currently fetch via readme-scribe
+## add another github api request to show which github repos are written in
+#which language an list them according to the language that is no.1 in most repos -> language/repo
 
 ##TODO The idea for this repo is that a persons github profile repo should be setup with a
 ##github action that runs this wakatime-stats repo and this bash script gets
