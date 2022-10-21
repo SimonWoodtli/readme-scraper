@@ -5,14 +5,12 @@ source api-key #Temporary for testing the script
 _main() {
   local preTemplateFile="$PWD/templates/preTemplateReadme.md.tpl"
   local templateFile="$PWD/templates/README.md.tpl"
-  local fetchWakaData
-  fetchWakaData=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
   ## Find all the html comment tags and put them in an array. 
   local -a findComments=( "languages" "editors" "os" "projects" "timezone")
   local -a foundComments=()
   local -i checkCommentStartLine
   local -i checkCommentEndLine
-
+  ## TODO create findComments function
   ## Loop over all possible comments from findComments and check if they
   ## can be found in preTemplateFile, if yes add them to foundComments
   for findComment in "${findComments[@]}"; do
@@ -24,59 +22,106 @@ _main() {
   done
   [[ -n $foundComments ]] || exit 1
 
-  _fetchDataLanguages
+  _fetchData
 }
 
-_fetchDataLanguages() {
-  ## create variables and arrays
-  local languagesName
-  local languagesPercent
-  local languagesText
-  local languagesNameLines
-  local languagesPercentLines
-  local languagesTextLines
-  local -a languagesNameArray=()
-  local -a languagesPercentArray=()
-  local -a languagesTextArray=()
-  ## TODO make _fetchDataLanguages to generic _fetchData and grab all the
-  ## data strings that are defined in the comment array
-  ## For precise processing and printing an array is more useful than just having all
-  ## the data for each language in a variable
-  
-  ## TODO If it can't find any data because the user was inactive make
-  ## sure a inactive() function gets triggered that prints this inactivity
-  ## Fetch data as strings per line in a variable
-  languagesName=$(echo "$fetchWakaData" | jq -r '.data.languages | .[] | .name')
-  languagesPercent=$(echo "$fetchWakaData" | jq -r '.data.languages | .[] | .percent')
-  languagesText=$(echo "$fetchWakaData" | jq -r '.data.languages | .[] | .text')
-  ## Get the total number of lines for each variable
-  ## Since each collection contains the "text" key-value pair it is
-  ##sufficient to only tackle the total number of lines from one key-value
-  ##pair
-  languagesNameLines=$(echo "$languagesName" | wc -l)
-  languagesPercentLines=$(echo "$languagesPercent" | wc -l)
-  languagesTextLines=$(echo "$languagesText" | wc -l)
-  [[ "$languagesNameLines" == "$languagesPercentLines" && "$languagesNameLines" == "$languagesTextLines" ]] || exit 2
-  ## Fill up the empty arrays while looping over the total amount of
-  ##lines
-  for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
-    languagesNameArray+=( "$(echo "$fetchWakaData" | jq -r ".data.languages | .[$i] | .name")" )
-    languagesPercentArray+=( "$(echo "$fetchWakaData" | jq -r ".data.languages | .[$i] | .percent")" )
-    languagesTextArray+=( "$(echo "$fetchWakaData" | jq  -r ".data.languages | .[$i] | .text")" )
+_fetchData() {
+  local fetchWakaData
+  fetchWakaData=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
+  _filterData
+}
+
+_filterData() {
+  ##  Declare local variables: strings, integers and arrays
+  local filterDataName
+  local filterDataPercent
+  local filterDataText
+  local -i filterDataNameLines
+  local -i filterDataPercentLines
+  local -i filterDataTextLines
+  local -A filterDataNameArray=()
+  local -A filterDataPercentArray=()
+  local -A filterDataTextArray=()
+  local -A filterDataLinesArray=()
+  ## TODO create a function for this loop line finding loop
+  ## This loop checks the line numbers filtered from the data. Then it
+  ## stores the line numbers into an array. And at the end checks if every
+  ## collection key-value pair has the same line numbers or exit the script.
+  ## 'line number array loop':
+  for foundComment in "${foundComments[@]}"; do                                            
+    ## check if foundComment is timezone if so break out of the loop
+    [[ "$foundComment" != timezone ]] || break
+    ## TODO If it can't find any data because the user was inactive make
+    ## sure a inactive() function gets triggered that prints this inactivity
+    ## Fetch data as strings per line in a variable
+    filterDataName=$(echo "$fetchWakaData" | jq -r '.data.'"$foundComment"' | .[] | .name')
+    filterDataPercent=$(echo "$fetchWakaData" | jq -r '.data.'"$foundComment"' | .[] | .percent')
+    filterDataText=$(echo "$fetchWakaData" | jq -r '.data.'"$foundComment"' | .[] | .text')
+    ## Get the total number of lines for each variable and store it in associative array
+    filterDataLinesArray+=( ["$foundComment"NameLines]=$(echo "$filterDataName" | wc -l) )
+    filterDataLinesArray+=( ["$foundComment"PercentLines]=$(echo "$filterDataPercent" | wc -l) )
+    filterDataLinesArray+=( ["$foundComment"TextLines]=$(echo "$filterDataText" | wc -l) )
+    ## debug
+    #for key in "${!filterDataLinesArray[@]}"; do echo "$key => ${filterDataLinesArray[$key]}"; done
+    #echo "${foundComments[@]}"
+    #echo $foundComment
+    ## test if lines per foundComment are the same on each filtered variable
+    [[ ${filterDataLinesArray["$foundComment"NameLines]} -eq ${filterDataLinesArray["$foundComment"PercentLines]} && \
+      ${filterDataLinesArray["$foundComment"NameLines]} -eq ${filterDataLinesArray["$foundComment"TextLines]} ]] || exit 2
   done
+
+  ##TODO DRY create a function with this loop and allow changing data to
+  ##be passed in function calls
+  if grep -q 'languages' <<< "${foundComments[@]}"; then ## only use this if the elements in the array do not contain spaces!
+    ## Filter languages data and add it to arrays. Uses 'line number array loop' as max. index to iterate over
+    for ((i = 0 ; i < "${filterDataLinesArray[languagesNameLines]}" ; i++)); do
+      filterDataNameArray+=( [languagesName"$i"]="$(echo "$fetchWakaData" | jq -r ".data.languages | .[$i] | .name")" )
+      filterDataPercentArray+=( [languagesPercent"$i"]="$(echo "$fetchWakaData" | jq -r ".data.languages | .[$i] | .percent")" )
+      filterDataTextArray+=( [languagesText"$i"]="$(echo "$fetchWakaData" | jq -r ".data.languages | .[$i] | .text")" )
+    done
+  fi
+  if grep -q 'editors' <<< "${foundComments[@]}"; then ## only use this if the elements in the array do not contain spaces!
+    ## Filter editors data and add it to arrays. Uses 'line number array loop' as max. index to iterate over
+    for ((i = 0 ; i < "${filterDataLinesArray[editorsNameLines]}" ; i++)); do
+      filterDataNameArray+=( [editorsName"$i"]="$(echo "$fetchWakaData" | jq -r ".data.editors | .[$i] | .name")" )
+      filterDataPercentArray+=( [editorsPercent"$i"]="$(echo "$fetchWakaData" | jq -r ".data.editors | .[$i] | .percent")" )
+      filterDataTextArray+=( [editorsText"$i"]="$(echo "$fetchWakaData" | jq -r ".data.editors | .[$i] | .text")" )
+    done
+  fi
+  if grep -q 'os' <<< "${foundComments[@]}"; then ## only use this if the elements in the array do not contain spaces!
+    ## Filter OS data and add it to array. Uses 'line number array loop' as max. index to iterate over.
+    for ((i = 0 ; i < "${filterDataLinesArray[osNameLines]}" ; i++)); do
+      filterDataNameArray+=( [osName"$i"]="$(echo "$fetchWakaData" | jq -r ".data.os | .[$i] | .name")" )
+      filterDataPercentArray+=( [osPercent"$i"]="$(echo "$fetchWakaData" | jq -r ".data.os | .[$i] | .percent")" )
+      filterDataTextArray+=( [osText"$i"]="$(echo "$fetchWakaData" | jq -r ".data.os | .[$i] | .text")" )
+    done
+  fi
+  if grep -q 'projects' <<< "${foundComments[@]}"; then ## only use this if the elements in the array do not contain spaces!
+    ## Filter projects data and add it to array. Uses 'line number array loop' as max. index to iterate over.
+    for ((i = 0 ; i < "${filterDataLinesArray[projectsNameLines]}" ; i++)); do
+      filterDataNameArray+=( [projectsName"$i"]="$(echo "$fetchWakaData" | jq -r ".data.projects | .[$i] | .name")" )
+      filterDataPercentArray+=( [projectsPercent"$i"]="$(echo "$fetchWakaData" | jq -r ".data.projects | .[$i] | .percent")" )
+      filterDataTextArray+=( [projectsText"$i"]="$(echo "$fetchWakaData" | jq -r ".data.projects | .[$i] | .text")" )
+    done
+  fi
+  ##debug
+  #for key in "${!filterDataPercentArray[@]}"; do echo "$key => ${filterDataPercentArray[$key]}"; done
+  #for key in "${!filterDataTextArray[@]}"; do echo "$key => ${filterDataTextArray[$key]}"; done
+  #for key in "${!filterDataNameArray[@]}"; do echo "$key => ${filterDataNameArray[$key]}"; done
+  #echo "${filterDataLinesArray[editorsNameLines]}"
+  #echo "${filterDataLinesArray[@]}"
+  #for key in "${!filterDataNameArray[@]}"; do echo "$key => ${filterDataNameArray[$key]}"; done
   _printDataLanguages
-  #echo ${languagesTextArray[@]}
-  #echo ${languagesTextArray[0]}
 }
 _printDataLanguages() {
   ## TODO make _printDataLanguages to generic _printData and print all the
   ## Data strings that are defined in the comment array
   local languagesHtmlBlock='<h4>🔥 Languages:</h4>'
   #local backslash="\\\"
-  for ((i = 0 ; i < "$languagesTextLines" ; i++)); do
+  for ((i = 0 ; i < "$filterDataTextLines" ; i++)); do
     #echo $i
     languagesHtmlBlock+='
-<span>'"${languagesNameArray[$i]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${languagesTextArray[$i]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${languagesPercentArray[$i]}%"'</span>'
+<span>'"${filterDataNameArray[$i]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataTextArray[$i]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataPercentArray[$i]}%"'</span>'
   done
   ##SOLUTION!!! https://stackoverflow.com/questions/67929263/inserting-contents-of-one-text-file-into-another-in-bash
   ## Im no't too proud for having to use a buffer file, but sed with multi
