@@ -8,7 +8,7 @@ _main() {
   local fetchWakaData
   fetchWakaData=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
   ## Find all the html comment tags and put them in an array. 
-  local -a findComments=( "anguages" "editors" "os" "projects" "timezone")
+  local -a findComments=( "languages" "editors" "os" "projects" "timezone")
   local -a foundComments=()
   local -i checkCommentStartLine
   local -i checkCommentEndLine
