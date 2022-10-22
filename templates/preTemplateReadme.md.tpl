@@ -45,6 +45,12 @@
   </a></p>
   <!--languages-start-->
   <!--languages-end-->
+  <!--editors-start-->
+  <!--editors-end-->
+  <!--os-start-->
+  <!--os-end-->
+  <!--projects-start-->
+  <!--projects-end-->
   
 </details>
 
