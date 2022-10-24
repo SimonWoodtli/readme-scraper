@@ -108,37 +108,74 @@ _filterData() {
       filterDataTextArray+=( [projectsText"$i"]="$(echo "$fetchWakaData" | jq -r ".data.projects | .[$i] | .text")" )
     done
   fi
+  ##TODO add fetch timezone (directly only one key-value pair) and store
+  ##into variable
+  
   ##debug
   #for key in "${!filterDataPercentArray[@]}"; do echo "$key => ${filterDataPercentArray[$key]}"; done
   #for key in "${!filterDataTextArray[@]}"; do echo "$key => ${filterDataTextArray[$key]}"; done
   #for key in "${!filterDataNameArray[@]}"; do echo "$key => ${filterDataNameArray[$key]}"; done
   #echo "${filterDataLinesArray[editorsNameLines]}"
   #echo "${filterDataLinesArray[@]}"
+  #echo ${filterDataLinesArray[languagesNameLines]}
   #for key in "${!filterDataNameArray[@]}"; do echo "$key => ${filterDataNameArray[$key]}"; done
-  _printDataLanguages
+  _printHtmlBlocks
 }
-_printDataLanguages() {
+_createHtmlBlock() {
+  local commentArg="$1"
+  local languagesHtmlBlock='<h4>💬 Languages:</h4>'
+  local editorsHtmlBlock='<h4>📝 Editors:</h4>'
+  local osHtmlBlock='<h4>💻 Operating Systems:</h4>'
+  local projectsHtmlBlock='<h4>🌱 Projects:</h4>'
+  ##TODO create clock emoji according to timezone
+  local timezoneHtmlBlock='<h4>🕐 Timezone:</h4>'
+  ## Indirectly reference to assign variables in loop.
+  local -n htmlBlock=${commentArg}HtmlBlock
+  ##TODO if argument is timezone create if statement -> no loop needed
+  ##just a one liner and exit out of this function after that
+  for ((i = 0 ; i < "${filterDataLinesArray["${commentArg}NameLines"]}" ; i++)); do
+    ## indirectly refer to variables to append more content
+    ## ${commentArg}HtmlBlock+= => doesn't work as an assignment won't accept $
+    ##https://stackoverflow.com/questions/27557146/assigning-one-variable-to-another-in-bash#27557194
+    htmlBlock+='
+<span>'"${filterDataNameArray[""${commentArg}"Name"$i""]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataTextArray[""${commentArg}"Text"$i""]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataPercentArray[""${commentArg}"Percent"$i""]}%"'</span>'
+    ##debug
+    #echo $htmlBlock
+    #echo "${htmlBlock}"
+    #echo "${filterDataNameArray[""${commentArg}"Name"$i""]}"
+    #echo "${filterDataLinesArray["${commentArg}NameLines"]}"
+    #echo ${filterDataNameArray[languagesName0]}
+    #echo ${filterDataNameArray[languagesName1]}
+  done
+  _writeBuffer $commentArg
+}
+_writeBuffer() {
+  #local commentArg="$1"
+  #local -n htmlBlock=${commentArg}HtmlBlock
+  cat <<< "$htmlBlock" > buffer
+  #echo ""${commentArg}"HtmlBlock" > buffer
+}
+_printHtmlBlocks() {
   ## TODO make _printDataLanguages to generic _printData and print all the
   ## Data strings that are defined in the comment array
-  local languagesHtmlBlock='<h4>🔥 Languages:</h4>'
-  #local backslash="\\\"
-  for ((i = 0 ; i < "$filterDataTextLines" ; i++)); do
-    #echo $i
-    languagesHtmlBlock+='
-<span>'"${filterDataNameArray[$i]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataTextArray[$i]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataPercentArray[$i]}%"'</span>'
+
+  ##TODO Create loop according to $foundComments array better yet create
+  #case for it
+  for foundComment in "${foundComments[@]}"; do
+    _createHtmlBlock $foundComment
+    _printHtmlBlock $foundComment
+    _cleanUpBuffer
   done
-  ##SOLUTION!!! https://stackoverflow.com/questions/67929263/inserting-contents-of-one-text-file-into-another-in-bash
-  ## Im no't too proud for having to use a buffer file, but sed with multi
-  #line strings is a pain, and learning perl takes too much time -> gotta finish this project!
-  ##TODO Maybe I can use the mktemp command to create a temp file gotta
-  ## figure out once this is in a docker container
-  echo "$languagesHtmlBlock" > buffer
-  ## Add new api content to preTemplateFile
-  printf "%s\n" "/<!--languages-start-->/r buffer" w  | ed -s "$preTemplateFile"
-  ## Update new api content into templateFile
-  cat "$preTemplateFile" > "$templateFile"
-  _cleanUpBuffer
   _cleanUpTemplates
+}
+
+_printHtmlBlock() {
+  local commentArg="$1"
+  ## Add new API data to preTemplateFile
+  printf "%s\n" "/<!--"${commentArg}"-start-->/r buffer" w  | ed -s "$preTemplateFile"
+  ## Update new api content into templateFile
+  ## TODO avoid cat/echo use here strings
+  cat "$preTemplateFile" > "$templateFile"
 }
 
 _cleanUpTemplates() {
@@ -156,6 +193,7 @@ _cleanUpTemplates() {
     ## If findCommentStartLine gives back 0 skip sed commands
     if [[ $findCommentStartLine -ne 0 && $findCommentEndLine -ne 0 ]]; then
       ## Delete html comment tags from templateFile
+      ##FIXME only deletes the first html comment but the rest stays
       sed -i "${findCommentStartLine}d;${findCommentEndLine}d" "$templateFile"
       ## Adjust num to match content
       ((findCommentStartLine=findCommentStartLine+1))
@@ -178,6 +216,10 @@ _main
 ##TODO ADDITIONAL: Add the github api and have some queries about github stats: replace all the functions I currently fetch via readme-scribe
 ## add another github api request to show which github repos are written in
 #which language an list them according to the language that is no.1 in most repos -> language/repo
+##TODO Maybe I can use the mktemp command to create a temp file instead
+#of createing my buffer file figure out once this is in a docker container
+##TODO add a percentage/progress bar to the html block to visualize the
+##percentage
 
 ##TODO The idea for this repo is that a persons github profile repo should be setup with a
 ##github action that runs this wakatime-stats repo and this bash script gets
