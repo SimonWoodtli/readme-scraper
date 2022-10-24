@@ -51,12 +51,16 @@ _filterData() {
   for foundComment in "${foundComments[@]}"; do                                            
     ## check if foundComment is timezone if so break out of the loop
     [[ "$foundComment" != timezone ]] || break
+    ## filter operating system with correct keyword in API
+    if [[ "$foundComment" == "os" ]]; then foundComment="operating_systems"; fi
     ## TODO If it can't find any data because the user was inactive make
     ## sure a inactive() function gets triggered that prints this inactivity
     ## Fetch data as strings per line in a variable
     filterDataName=$(echo "$fetchWakaData" | jq -r '.data.'"$foundComment"' | .[] | .name')
     filterDataPercent=$(echo "$fetchWakaData" | jq -r '.data.'"$foundComment"' | .[] | .percent')
     filterDataText=$(echo "$fetchWakaData" | jq -r '.data.'"$foundComment"' | .[] | .text')
+    ## change variable back to more sane shortcut
+    if [[ "$foundComment" == "operating_systems" ]]; then foundComment="os"; fi
     ## Get the total number of lines for each variable and store it in associative array
     filterDataLinesArray+=( ["$foundComment"NameLines]=$(echo "$filterDataName" | wc -l) )
     filterDataLinesArray+=( ["$foundComment"PercentLines]=$(echo "$filterDataPercent" | wc -l) )
@@ -91,9 +95,9 @@ _filterData() {
   if grep -q 'os' <<< "${foundComments[@]}"; then ## only use this if the elements in the array do not contain spaces!
     ## Filter OS data and add it to array. Uses 'line number array loop' as max. index to iterate over.
     for ((i = 0 ; i < "${filterDataLinesArray[osNameLines]}" ; i++)); do
-      filterDataNameArray+=( [osName"$i"]="$(echo "$fetchWakaData" | jq -r ".data.os | .[$i] | .name")" )
-      filterDataPercentArray+=( [osPercent"$i"]="$(echo "$fetchWakaData" | jq -r ".data.os | .[$i] | .percent")" )
-      filterDataTextArray+=( [osText"$i"]="$(echo "$fetchWakaData" | jq -r ".data.os | .[$i] | .text")" )
+      filterDataNameArray+=( [osName"$i"]="$(echo "$fetchWakaData" | jq -r ".data.operating_systems | .[$i] | .name")" )
+      filterDataPercentArray+=( [osPercent"$i"]="$(echo "$fetchWakaData" | jq -r ".data.operating_systems | .[$i] | .percent")" )
+      filterDataTextArray+=( [osText"$i"]="$(echo "$fetchWakaData" | jq -r ".data.operating_systems | .[$i] | .text")" )
     done
   fi
   if grep -q 'projects' <<< "${foundComments[@]}"; then ## only use this if the elements in the array do not contain spaces!
