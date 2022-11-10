@@ -1,5 +1,6 @@
 #!/usr/bin/bash
-source api-key #Temporary for testing the script
+declare api-key="$WAKATIME_API_KEY"
+#source api-key #Temporary for testing the script
 # dependencies: bash, sed, jq, printf, ed
 
 _main() {
