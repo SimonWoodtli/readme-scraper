@@ -43,22 +43,31 @@
   <a href="https://wakatime.com/@SimonWoodtli">
   <img align="center" width="400" height="300" src="https://wakatime.com/share/@SimonWoodtli/ec82b93c-e72b-4bcc-83ed-8f483d24a9ce.svg" />
   </a></p>
-<h4>🔥 Languages:</h4>
-<span>sh</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9 hrs 35 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>37.44%</span>
-<span>Markdown</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9 hrs 16 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>36.22%</span>
-<span>Smarty</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3 hrs 10 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>12.39%</span>
-<span>YAML</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr 6 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>4.34%</span>
-<span>Bash</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>54 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.56%</span>
-<span>Vim Script</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>52 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.41%</span>
-<span>Other</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>22 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1.44%</span>
-<span>Perl</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>7 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.47%</span>
-<span>JSON</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>4 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.29%</span>
-<span>gitignore</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.19%</span>
-<span>gitconfig</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 min</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.09%</span>
-<span>conf</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 min</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.08%</span>
-<span>dircolors</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 min</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.07%</span>
-<span>Text</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.01%</span>
-<span>XML</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.01%</span>
+
+<h4>💬 Languages:</h4>
+<span>sh</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>14 hrs 35 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>70.95%</span>
+<span>Smarty</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr 47 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>8.69%</span>
+<span>JSON</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>44 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.6%</span>
+<span>Vim Script</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>28 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2.28%</span>
+<span>Bash</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>24 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1.98%</span>
+<span>Python</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>20 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1.65%</span>
+<span>Other</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>18 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1.47%</span>
+<span>conf</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.04%</span>
+<span>Text</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.02%</span>
+<h4>🌱 Projects:</h4>
+<span>wakatime-stats</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>15 hrs 55 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>77.43%</span>
+<span>zet</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr 36 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>7.84%</span>
+<span>dotfiles</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>58 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>4.74%</span>
+<span>Private</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.19%</span>
+  <!--projects-end-->
+  <!--editors-start-->
+<h4>📝 Editors:</h4>
+<span>Vim</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>20 hrs 34 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>100.0%</span>
+  <!--editors-end-->
+  <!--os-start-->
+<h4>💻 Operating Systems:</h4>
+<span>Linux</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>20 hrs 34 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>100.0%</span>
+  <!--os-end-->
   
 </details>
 
