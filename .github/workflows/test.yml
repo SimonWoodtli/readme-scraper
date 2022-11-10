@@ -11,24 +11,36 @@ jobs:
     runs-on: ubuntu-latest                                                      
                                                                                 
     steps:                                                                      
+      ## make githubs repo content available to docker
       - name: Checkout Repository                                               
         uses: actions/checkout@v2                                               
         with:                                                                   
           ref: main                                                             
                                                                                 
-      - name: Render Template                                                   
-        uses: simonwoodtli/readme-scraper@main
-        env:                                                                    
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
-          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-        with:                                                                   
-          template: "templates/preTemplateReadme.md.tpl"                                   
-          writeTo: "templates/README.md.tpl"                                                  
+      ## run docker with `readme-scraper` script
+      - name: Run Docker container to render template to README.md.tpl
+        uses: addnab/docker-run-action@v3
+        with:
+          image: simonwoodtli/readme-scraper:latest
+          env:                                                                    
+            GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
+            WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+      ## mount github repo content to /root
+          options: -v ${{ github.workspace }}:/root
+          run: |
+            readme-scraper
+
+      - name: check content
+        run: cat templates/README.md.tpl
+
+        #with:                                                                   
+          #template: "templates/preTemplateReadme.md.tpl"                                   
+          #writeTo: "templates/README.md.tpl"                                                  
                                                                                 
-      - name: Push                                                              
-        run: |                                                                  
-          git config user.name readme-bot 🤖                                 
-          git config user.email actions@github.com                              
-          git add .                                                             
-          git commit -m "📝 TEST: update auto-generated README.md"                    
-          git push origin main     
+# - name: Push
+# run: |
+# git config user.name readme-bot 🤖
+# git config user.email actions@github.com
+# git add .
+# git commit -m "📝 TEST: update auto-generated README.md"
+# git push origin main

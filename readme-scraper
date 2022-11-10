@@ -4,8 +4,8 @@ declare api-key="$WAKATIME_API_KEY"
 # dependencies: bash, sed, jq, printf, ed
 
 _main() {
-  local preTemplateFile="$PWD/templates/preTemplateReadme.md.tpl"
-  local templateFile="$PWD/templates/README.md.tpl"
+  local preTemplateFile="$HOME/templates/preTemplateReadme.md.tpl"
+  local templateFile="$HOME/templates/README.md.tpl"
   ## Find all the html comment tags and put them in an array. 
   local -a findComments=( "languages" "editors" "os" "projects" "timezone")
   local -a foundComments=()
