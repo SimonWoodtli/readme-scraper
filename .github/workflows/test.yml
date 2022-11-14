@@ -9,32 +9,24 @@ on:
 jobs:                                                                           
   build:                                                                   
     runs-on: ubuntu-latest                                                      
-                                                                                
-    steps:                                                                      
-      ## make githubs repo content available to docker
-      - name: Checkout Repository                                               
-        uses: actions/checkout@v2                                               
-        with:                                                                   
-          ref: main                                                             
-
-                                                                                
-      ## run docker with `readme-scraper` script
-      - name: Run Docker container to render template to README.md.tpl
-        container:
-          image: simonwoodtli/readme-scraper:latest
-      ## mount github repo content to /root within docker
-          env:
-            GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
-            WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-            MY_SECRET: ${{ secrets.MY_SECRET }}
-          options: -v ${{ github.workspace }}:/root
-        steps:
+    container:
+      image: simonwoodtli/readme-scraper:latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
+        WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+        MY_SECRET: ${{ secrets.MY_SECRET }}
+      options: -v ${{ github.workspace }}:/root
+      steps:
           - name: Checkout Project
             uses: actions/checkout@v2
           - name: echo stuff
             run: |
               echo "variable value is $MY_SECRET"
               ls /root
+
+      ## run docker with `readme-scraper` script
+      #- name: Run Docker container to render template to README.md.tpl
+      ## mount github repo content to /root within docker
       ## pass env variables/secrets into docker
             ##FIXME docker-run-action can't pass secrets to docker
             ## container, either don't use it or try it with Dockerfile
