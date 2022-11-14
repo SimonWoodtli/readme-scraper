@@ -24,13 +24,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-          $MY_SECRET: ${{ secrets.MY_SECRET }}
+          #MY_SECRET: ${{ secrets.MY_SECRET }}
         with:
           image: simonwoodtli/readme-scraper:latest
       ## mount github repo content to /root within docker
           options: |
+            MY_SECRET: ${{ secrets.MY_SECRET }}
             -v ${{ github.workspace }}:/root
-            #--env MY_SECRET=${{ MY_SECRET }}
+            --env MY_SECRET=$MY_SECRET
 
           run: |
             ##TODO copy /root/readme-script to ~/.local/bin as it's
