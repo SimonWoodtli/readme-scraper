@@ -45,10 +45,11 @@ jobs:
             #cat /root/templates/README.md.tpl
 
       - name: check content
-        run: echo template
-        run: cat /root/templates/README.md.tpl
-        run: echo pretemplate
-        run: cat /root/templates/preTemplateReadme.md.tpl
+        run: |
+          echo template
+          cat /root/templates/README.md.tpl
+          echo pretemplate
+          cat /root/templates/preTemplateReadme.md.tpl
 
         #with:                                                                   
           #template: "templates/preTemplateReadme.md.tpl"                                   
