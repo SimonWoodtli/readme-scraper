@@ -20,11 +20,11 @@ jobs:
       ## run docker with `readme-scraper` script
       - name: Run Docker container to render template to README.md.tpl
         uses: addnab/docker-run-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
+          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         with:
           image: simonwoodtli/readme-scraper:latest
-          env:                                                                    
-            GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
-            WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
       ## mount github repo content to /root
           options: -v ${{ github.workspace }}:/root
           run: |
