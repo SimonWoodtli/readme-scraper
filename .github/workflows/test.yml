@@ -20,7 +20,7 @@ jobs:
       - name: test secret env variables
         env:
           MY_SECRET: ${{ secrets.MY_SECRET }}
-        run: echo "MY_SECRET has value: $MY_SECRET"
+        run: echo "MY_SECRET has value $MY_SECRET"
                                                                                 
       ## run docker with `readme-scraper` script
       - name: Run Docker container to render template to README.md.tpl
