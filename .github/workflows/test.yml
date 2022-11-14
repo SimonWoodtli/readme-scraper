@@ -20,6 +20,7 @@ jobs:
       ## run docker with `readme-scraper` script
       - name: Run Docker container to render template to README.md.tpl
         uses: addnab/docker-run-action@v3
+      ## pass env variables/secrets into docker
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
@@ -28,6 +29,15 @@ jobs:
       ## mount github repo content to /root
           options: -v ${{ github.workspace }}:/root
           run: |
+            ## download script
+            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
+            ## give permissions
+            chmod u+x readme-scraper
+            ## create ~ bin
+            mkdir -p /root/.local/bin
+            ## move script
+            mv readme-scraper /root/.local/bin/readme-scraper
+            ## exec script
             readme-scraper
 
       - name: check content
