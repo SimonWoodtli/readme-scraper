@@ -41,11 +41,13 @@ jobs:
             mv readme-scraper /root/.local/bin/readme-scraper
             ## exec script
             readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
+            #echo readme-template
+            #cat /root/templates/README.md.tpl
 
       - name: check content
-          run: echo template:
+          run: echo template
           run: cat /root/templates/README.md.tpl
-          run: echo pretemplate:
+          run: echo pretemplate
           run: cat /root/templates/preTemplateReadme.md.tpl
 
         #with:                                                                   
