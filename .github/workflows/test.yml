@@ -7,7 +7,7 @@ on:
     - cron: "0 0 * * *"                                                         
                                                                                 
 jobs:                                                                           
-  readme-scraper:                                                                   
+  build:                                                                   
     runs-on: ubuntu-latest                                                      
                                                                                 
     steps:                                                                      
@@ -29,9 +29,12 @@ jobs:
             MY_SECRET: ${{ secrets.MY_SECRET }}
           options: -v ${{ github.workspace }}:/root
         steps:
-          - uses: actions/checkout@v2
-          - name: run echo
-            run: echo "variable value is $MY_SECRET"
+          - name: Checkout Project
+            uses: actions/checkout@v2
+          - name: echo stuff
+            run: |
+              echo "variable value is $MY_SECRET"
+              ls /root
       ## pass env variables/secrets into docker
             ##FIXME docker-run-action can't pass secrets to docker
             ## container, either don't use it or try it with Dockerfile
