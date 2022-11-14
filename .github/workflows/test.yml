@@ -15,13 +15,13 @@ jobs:
         WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         MY_SECRET: ${{ secrets.MY_SECRET }}
       options: -v ${{ github.workspace }}:/root
-      steps:
-          - name: Checkout Project
-            uses: actions/checkout@v2
-          - name: echo stuff
-            run: |
-              echo variable value is $MY_SECRET
-              ls /root
+    steps:
+        - name: Checkout Project
+          uses: actions/checkout@v2
+        - name: echo stuff
+          run: |
+            echo variable value is $MY_SECRET
+            ls /root
 
       ## run docker with `readme-scraper` script
       #- name: Run Docker container to render template to README.md.tpl
