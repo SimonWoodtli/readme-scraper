@@ -28,9 +28,11 @@ jobs:
         with:
           image: simonwoodtli/readme-scraper:latest
       ## mount github repo content to /root within docker
+          secrets: |
+            "MY_SECRET=${{ secrets.MY_SECRET }}"
           options: |
             -v ${{ github.workspace }}:/root
-            --env MY_SECRET=$secrets.MY_SECRET
+            --env MY_SECRET=$MY_SECRET
 
           run: |
             ##TODO copy /root/readme-script to ~/.local/bin as it's
