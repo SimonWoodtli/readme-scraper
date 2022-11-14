@@ -1,6 +1,6 @@
 FROM alpine:latest
 #ARG WAKATIME_API_KEY=$WAKATIME_API_KEY
-ARG MY_SECRET=$MY_SECRET
+#ARG MY_SECRET=$MY_SECRET
 #ENV ENV="/root/.ashrc"
 #RUN echo "export $PATH=$PATH:.local/bin" > "/root/.ashrc"
 ## add ~/.local/bin to PATH

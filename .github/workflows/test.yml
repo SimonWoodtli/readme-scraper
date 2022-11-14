@@ -10,11 +10,13 @@ jobs:
     runs-on: ubuntu-latest                                                      
     container:
       image: simonwoodtli/readme-scraper:latest
+    ## needed env. variables
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
         WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-        MY_SECRET: ${{ secrets.MY_SECRET }}
-        #options: -v ${{ github.workspace }}:/root
+        MY_SECRET: ${{ secrets.MY_SECRET }} #test
+      ## mount github repo content to /root within docker
+        options: -v ${{ github.workspace }}:/root
     steps:
         - name: Checkout Project
           uses: actions/checkout@v2
@@ -22,10 +24,23 @@ jobs:
           run: |
             echo variable value is $MY_SECRET
             ls /root
+      ## if changes get made to the script this will always fetch the
+      ## newest version. If you fetch script from within Dockerfile you need to
+      ## update the container and push it to registry each time you do make
+      ## changes to the script.
+        - name: Fetch Script
+          run: |
+            ## use wget cause alpine comes with it but not with curl
+            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
+            chmod u+x readme-scraper
+            mv readme-scraper /root/.local/bin/readme-scraper
+        - name: Exec Script
+          run: readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
+        - name: echo template
+          run: echo /root/templates/README.md.tpl
 
       ## run docker with `readme-scraper` script
       #- name: Run Docker container to render template to README.md.tpl
-      ## mount github repo content to /root within docker
       ## pass env variables/secrets into docker
             ##FIXME docker-run-action can't pass secrets to docker
             ## container, either don't use it or try it with Dockerfile
