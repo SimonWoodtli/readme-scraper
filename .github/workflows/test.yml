@@ -29,7 +29,9 @@ jobs:
             MY_SECRET: ${{ secrets.MY_SECRET }}
           options: -v ${{ github.workspace }}:/root
         steps:
-          run: echo "variable value is $MY_SECRET"
+          - uses: actions/checkout@v2
+          - name: run echo
+            run: echo "variable value is $MY_SECRET"
       ## pass env variables/secrets into docker
             ##FIXME docker-run-action can't pass secrets to docker
             ## container, either don't use it or try it with Dockerfile
