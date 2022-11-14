@@ -17,25 +17,21 @@ jobs:
         with:                                                                   
           ref: main                                                             
 
-      - name: test secret env variables
-        env:
-          MY_SECRET: ${{ secrets.MY_SECRET }}
-        run: echo "MY_SECRET has value $MY_SECRET"
                                                                                 
       ## run docker with `readme-scraper` script
       - name: Run Docker container to render template to README.md.tpl
         uses: addnab/docker-run-action@v3
       ## pass env variables/secrets into docker
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
-          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-          #MY_SECRET: ${{ secrets.MY_SECRET }}
+      #env:
+      #GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
+      # WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         with:
+          my_secret: ${{ secrets.MY_SECRET }}
           image: simonwoodtli/readme-scraper:latest
       ## mount github repo content to /root within docker
           options: |
             -v ${{ github.workspace }}:/root
-            --env ${{ secrets.MY_SECRET }}
+            #--env ${{ secrets.MY_SECRET }}
 
           run: |
             ##TODO copy /root/readme-script to ~/.local/bin as it's
@@ -49,7 +45,7 @@ jobs:
             ## move script
             mv readme-scraper /root/.local/bin/readme-scraper
             ## test
-            echo "MY_SECRET has value: $MY_SECRET"
+            echo "MY_SECRET has value: $my_secret"
             ## exec script
             #readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
             #echo readme-template
