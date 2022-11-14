@@ -1,5 +1,4 @@
-name: Update README                                                             
-                                                                                
+name: CI to update github profile README.md                                              
 on:                                                                             
   push:                                                                         
   schedule:                                                                     
@@ -21,7 +20,7 @@ jobs:
             uses: actions/checkout@v2
           - name: echo stuff
             run: |
-              echo "variable value is $MY_SECRET"
+              echo variable value is $MY_SECRET
               ls /root
 
       ## run docker with `readme-scraper` script
