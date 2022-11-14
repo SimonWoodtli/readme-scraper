@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-declare api-key="$WAKATIME_API_KEY"
+declare wakaKey="$WAKATIME_API_KEY"
 #source api-key #Temporary for testing the script
 # dependencies: bash, sed, jq, printf, ed
 

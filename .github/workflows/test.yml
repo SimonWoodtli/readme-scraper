@@ -37,6 +37,12 @@ jobs:
             mkdir -p /root/.local/bin
             ## move script
             mv readme-scraper /root/.local/bin/readme-scraper
+            ## test
+            ls /root
+            echo base
+            cat /root/templates/preTemplateReadme.md.tpl
+            echo more base
+            cat /root/readme-scraper/templates/preTemplateReadme.md.tpl
             ## exec script
             readme-scraper
 
