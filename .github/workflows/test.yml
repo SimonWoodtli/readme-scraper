@@ -16,6 +16,11 @@ jobs:
         uses: actions/checkout@v2                                               
         with:                                                                   
           ref: main                                                             
+
+      - name: test secret env variables
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
+        run: echo "MY_SECRET has value: $MY_SECRET"
                                                                                 
       ## run docker with `readme-scraper` script
       - name: Run Docker container to render template to README.md.tpl
@@ -29,9 +34,8 @@ jobs:
           image: simonwoodtli/readme-scraper:latest
       ## mount github repo content to /root within docker
           options: |
-            MY_SECRET: ${{ secrets.MY_SECRET }}
             -v ${{ github.workspace }}:/root
-            --env MY_SECRET=$MY_SECRET
+            --env ${{ secrets.MY_SECRET }}
 
           run: |
             ##TODO copy /root/readme-script to ~/.local/bin as it's
