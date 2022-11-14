@@ -24,6 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+          MY_SECRET: ${{ secrets.MY_SECRET }}
         with:
           image: simonwoodtli/readme-scraper:latest
       ## mount github repo content to /root within docker
@@ -39,8 +40,10 @@ jobs:
             mkdir -p /root/.local/bin
             ## move script
             mv readme-scraper /root/.local/bin/readme-scraper
+            ## test
+            echo "MY_SECRET has value: $MY_SECRET"
             ## exec script
-            readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
+            #readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
             #echo readme-template
             #cat /root/templates/README.md.tpl
 
