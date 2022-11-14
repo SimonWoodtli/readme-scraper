@@ -27,37 +27,32 @@ jobs:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
           MY_SECRET: ${{ secrets.MY_SECRET }}
         with:
-          image: simonwoodtli/readme-scraper:latest
+          image: "Dockerfile"
       ## mount github repo content to /root within docker
           options: |
             -v ${{ github.workspace }}:/root
-            --env my_secret=${{ env.MY_SECRET }}
-
+            ##FIXME docker-run-action can't pass secrets to docker
+            ## container, either don't use it or try it with Dockerfile
+            ## and put the env. variables in there before building
+            ## container
+            #--env my_secret=${{ env.MY_SECRET }}
+            #--env my_secret=${{ secrets.MY_SECRET }}
+            ##TODO!!!! use a Dockerfile and at build time pass in the
+            #env. variables this action does not support this feature!
           run: |
-            ##TODO copy /root/readme-script to ~/.local/bin as it's
-            #already there no need to download it with wget
-            ## download script
-            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
-            ## give permissions
-            chmod u+x readme-scraper
-            ## create ~ bin
-            mkdir -p /root/.local/bin
-            ## move script
-            mv readme-scraper /root/.local/bin/readme-scraper
-            ## test
-            echo "MY_SECRET has value: $my_secret"
             printenv
+            echo "variable value is $MY_SECRET"
             ## exec script
             #readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
             #echo readme-template
             #cat /root/templates/README.md.tpl
 
-      - name: check content
-        run: |
-          echo template
-          cat /root/templates/README.md.tpl
-          echo pretemplate
-          cat /root/templates/preTemplateReadme.md.tpl
+# - name: check content
+# run: |
+# echo template
+# cat /root/templates/README.md.tpl
+# echo pretemplate
+# cat /root/templates/preTemplateReadme.md.tpl
 
         #with:                                                                   
           #template: "templates/preTemplateReadme.md.tpl"                                   
