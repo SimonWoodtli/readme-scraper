@@ -26,9 +26,11 @@ jobs:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         with:
           image: simonwoodtli/readme-scraper:latest
-      ## mount github repo content to /root
+      ## mount github repo content to /root within docker
           options: -v ${{ github.workspace }}:/root
           run: |
+            ##TODO copy /root/readme-script to ~/.local/bin as it's
+            #already there no need to download it with wget
             ## download script
             wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
             ## give permissions
@@ -41,10 +43,10 @@ jobs:
             readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
 
       - name: check content
-        run: echo template:
-        run: cat /root/templates/README.md.tpl
-        run: echo pretemplate:
-        run: cat /root/templates/preTemplateReadme.md.tpl
+          run: echo template:
+          run: cat /root/templates/README.md.tpl
+          run: echo pretemplate:
+          run: cat /root/templates/preTemplateReadme.md.tpl
 
         #with:                                                                   
           #template: "templates/preTemplateReadme.md.tpl"                                   
