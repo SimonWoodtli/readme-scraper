@@ -15,7 +15,7 @@ RUN ln -sf /bin/bash /usr/bin/bash
 ## create dir
 RUN mkdir -p /root/.local/bin
 ## symlink script
-RUN ln -sf /root/readme-scraper /root/.local/bin/readme-scraper
+#RUN ln -sf /root/readme-scraper /root/.local/bin/readme-scraper
 #CMD [ "readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl ]
 
 ## fetch script

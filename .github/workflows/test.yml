@@ -20,17 +20,17 @@ jobs:
                                                                                 
       ## run docker with `readme-scraper` script
       - name: Run Docker container to render template to README.md.tpl
-        uses: addnab/docker-run-action@v3
-      ## pass env variables/secrets into docker
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
-          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-          MY_SECRET: ${{ secrets.MY_SECRET }}
-        with:
-          image: "Dockerfile"
+        container:
+          image: simonwoodtli/readme-scraper:latest
       ## mount github repo content to /root within docker
-          options: |
-            -v ${{ github.workspace }}:/root
+          env:
+            GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
+            WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+            MY_SECRET: ${{ secrets.MY_SECRET }}
+          options: -v ${{ github.workspace }}:/root
+        steps:
+          run: echo "variable value is $MY_SECRET"
+      ## pass env variables/secrets into docker
             ##FIXME docker-run-action can't pass secrets to docker
             ## container, either don't use it or try it with Dockerfile
             ## and put the env. variables in there before building
@@ -39,9 +39,6 @@ jobs:
             #--env my_secret=${{ secrets.MY_SECRET }}
             ##TODO!!!! use a Dockerfile and at build time pass in the
             #env. variables this action does not support this feature!
-          run: |
-            printenv
-            echo "variable value is $MY_SECRET"
             ## exec script
             #readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
             #echo readme-template
