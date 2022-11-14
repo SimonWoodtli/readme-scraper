@@ -30,7 +30,7 @@ jobs:
       ## mount github repo content to /root within docker
           options: |
             -v ${{ github.workspace }}:/root
-            --env MY_SECRET=$MY_SECRET
+            --env MY_SECRET=${{ secrets.MY_SECRET }}
 
           run: |
             ##TODO copy /root/readme-script to ~/.local/bin as it's
