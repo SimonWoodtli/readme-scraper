@@ -35,12 +35,13 @@ jobs:
             ## use wget cause alpine comes with it but not with curl
             wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
             #ls /root
-            #echo not here
-            #ls
+            echo not here
+            ls
+            cat /root/readme-scraper
             #find . -type f -name 'readme-scraper'
 
         - name: Move Script
-          run: mv readme-scraper /root/.local/bin/readme-scraper
+          run: mv /root/readme-scraper /root/.local/bin/readme-scraper
 
         - name: Give Script Permissions
           run: chmod u+x /root/.local/bin/readme-scraper
