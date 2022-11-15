@@ -41,6 +41,8 @@ jobs:
             #chmod u+x /root/.local/bin/readme-scraper
 
             #find . -type f -name 'readme-scraper'
+        - name: Give Script Permissions
+          run: chmod u+x /root/readme-scraper
 
         - name: Exec Script
           run: /root/./readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
