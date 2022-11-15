@@ -41,7 +41,7 @@ jobs:
             #find . -type f -name 'readme-scraper'
 
         - name: Move Script
-          run: mv /root/readme-scraper /root/.local/bin/readme-scraper
+          run: cp /root/readme-scraper /root/.local/bin/readme-scraper
 
         - name: Give Script Permissions
           run: chmod u+x /root/.local/bin/readme-scraper
