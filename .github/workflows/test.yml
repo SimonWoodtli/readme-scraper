@@ -33,7 +33,7 @@ jobs:
         - name: Fetch Script
           run: |
             ## use wget cause alpine comes with it but not with curl
-            wget --output-document /root/.local/bin/readme-scraper https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
+            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin/
             chmod u+x /root/.local/bin/readme-scraper
 
         - name: Exec Script
