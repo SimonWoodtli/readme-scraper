@@ -34,7 +34,7 @@ jobs:
           run: |
             ## use wget cause alpine comes with it but not with curl
             wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
-            mv /root/readme-scraper /root/.local/bin/
+            mv readme-scraper /root/.local/bin/
             chmod u+x /root/.local/bin/readme-scraper
 
         - name: Exec Script
