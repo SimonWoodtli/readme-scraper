@@ -18,12 +18,30 @@ jobs:
     steps:
         - name: Checkout Project
           uses: actions/checkout@v2
+
         - name: echo stuff
           run: |
             echo variable value is $MY_SECRET
             ls /root
             rm /root/readme-scraper # temporarily so I can test if everything works
             ls /root
+
+      ## if changes get made to the script this will always fetch the
+      ## newest version. If you fetch script from within Dockerfile you need to
+      ## update the container and push it to registry each time you do make
+      ## changes to the script.
+        - name: Fetch Script
+          run: |
+            ## use wget cause alpine comes with it but not with curl
+            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
+            chmod u+x readme-scraper
+            mv readme-scraper /root/.local/bin/readme-scraper
+
+        - name: Exec Script
+          run: readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
+
+        - name: echo template
+          run: echo /root/templates/README.md.tpl
 
       ## run docker with `readme-scraper` script
       #- name: Run Docker container to render template to README.md.tpl
