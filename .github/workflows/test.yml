@@ -22,6 +22,8 @@ jobs:
           run: |
             echo variable value is $MY_SECRET
             ls /root
+            rm /root/readme-scraper # temporarily so I can test if everything works
+            ls /root
 
       ## run docker with `readme-scraper` script
       #- name: Run Docker container to render template to README.md.tpl
