@@ -24,7 +24,7 @@ jobs:
           run: |
             echo variable value is $MY_SECRET
             ls /root
-            rm /root/readme-scraper # temporarily so I can test if everything works
+            #rm /root/readme-scraper # temporarily so I can test if everything works
       ## if changes get made to the script this will always fetch the
       ## newest version. If you fetch script from within Dockerfile you need to
       ## update the container and push it to registry each time you do make
