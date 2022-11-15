@@ -37,13 +37,13 @@ jobs:
             #ls /root
             echo not here
             ls
-            cat /root/readme-scraper > /root/.local/bin/readme-scraper
-            chmod u+x /root/.local/bin/readme-scraper
+            #cat /root/readme-scraper > /root/.local/bin/readme-scraper
+            #chmod u+x /root/.local/bin/readme-scraper
 
             #find . -type f -name 'readme-scraper'
 
         - name: Exec Script
-          run: readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
+          run: /root/./readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
 
         - name: echo template
           run: echo /root/templates/README.md.tpl
