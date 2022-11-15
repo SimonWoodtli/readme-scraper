@@ -33,8 +33,9 @@ jobs:
         - name: Fetch Script
           run: |
             ## use wget cause alpine comes with it but not with curl
-            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin/
+            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
             chmod u+x /root/.local/bin/readme-scraper
+            mv /root/readme-scraper /root/.local/bin/
 
         - name: Exec Script
           run: readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
