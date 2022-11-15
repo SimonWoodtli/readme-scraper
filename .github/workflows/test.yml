@@ -33,7 +33,7 @@ jobs:
         - name: Fetch Script
           run: |
             ## use wget cause alpine comes with it but not with curl
-            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper > readme-scraper
+            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
             ls /root
             echo not here
             ls
