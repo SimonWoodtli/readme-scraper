@@ -16,15 +16,14 @@ RUN ln -sf /bin/bash /usr/bin/bash
 RUN mkdir -p /root/.local/bin
 ## symlink script
 #RUN ln -sf /root/readme-scraper /root/.local/bin/readme-scraper
+## maybe needs arguments to be passed in via github action and then here
 #CMD [ "readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl ]
 
 ## fetch script
-#RUN wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
+RUN wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin/
 ## give exec permissions
-#RUN chmod u+x readme-scraper
+RUN chmod u+x /root/.local/bin/readme-scraper
 ## move script .local/bin
 #RUN mkdir -p /root/.local/bin
 #RUN mv readme-scraper /root/.local/bin/readme-scraper
 
-## maybe needs arguments to be passed in via github action and then here
-#CMD ["wakatime-readme-scribe"]
