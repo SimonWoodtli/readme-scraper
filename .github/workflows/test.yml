@@ -35,8 +35,8 @@ jobs:
             #ls /root
         - name: fetch Script
           run: |
-            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P `pwd`/.local/bin
-            chmod u+x `pwd`/.local/bin/readme-scraper
+            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /`pwd`/.local/bin
+            chmod u+x /`pwd`/.local/bin/readme-scraper
 
 
       ## if changes get made to the script this will always fetch the
@@ -46,7 +46,7 @@ jobs:
         - name: Exec Script
           run: |
             find . -type f -name 'readme-scraper'
-            cat .local/bin/readme-scraper
+            cat /`pwd`/.local/bin/readme-scraper
             readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
 
         - name: echo template
