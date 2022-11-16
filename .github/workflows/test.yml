@@ -36,19 +36,21 @@ jobs:
         - name: fetch Script
           run: |
             ls /__w/
-            echo no
+            echo 0
             ls /
-            echo nope
+            echo 1
             ls /bin
-            echo nope
+            echo "/root"
             ls -lah /root
-            echo nope
+            echo "/__w/readme-scraper/readme-scraper"
+            ls -lah /__w/readme-scraper/readme-scraper
+            echo 3
             ls /bin
-            echo nope
+            echo 4
             ls /github
-            echo nope
+            echo 5
             ls __e
-            echo nope
+            echo 6
             ls __t
             wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin
             chmod u+x /__w/root/.local/bin/readme-scraper
