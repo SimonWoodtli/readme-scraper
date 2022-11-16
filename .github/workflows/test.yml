@@ -1,11 +1,15 @@
+## Name of the Workflow
 name: CI to update github profile README.md                                              
+## Events to trigger Action:
 on:                                                                             
   push:                                                                         
   schedule:                                                                     
     # runs once per day at midnight                                             
     - cron: "0 0 * * *"                                                         
                                                                                 
+## Jobs groups a set of actions to get executed
 jobs:                                                                           
+  ## Name of first job/group with its actions
   build:                                                                   
     runs-on: ubuntu-latest                                                      
     container:
@@ -15,6 +19,8 @@ jobs:
         WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         MY_SECRET: ${{ secrets.MY_SECRET }}
       options: -v ${{ github.workspace }}:/root
+
+    ## actual actions
     steps:
         - name: Checkout Project
           uses: actions/checkout@v2
@@ -23,6 +29,7 @@ jobs:
           run: |
             echo variable value is $MY_SECRET
             ls /root
+            cat /root/readme-scraper
             #rm /root/readme-scraper # temporarily so I can test if everything works
             #ls /root
 
@@ -32,6 +39,7 @@ jobs:
       ## changes to the script.
         - name: Exec Script
           run: |
+            find . -type f -name 'readme-scraper'
             cat /root/.local/bin/readme-scraper
             readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
 
