@@ -38,6 +38,18 @@ jobs:
             ls /__w/
             echo no
             ls /
+            echo nope
+            ls /bin
+            echo nope
+            ls -lah /root
+            echo nope
+            ls /bin
+            echo nope
+            ls /github
+            echo nope
+            ls __e
+            echo nope
+            ls __t
             wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin
             chmod u+x /__w/root/.local/bin/readme-scraper
 
