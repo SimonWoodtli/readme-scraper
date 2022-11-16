@@ -23,29 +23,17 @@ jobs:
           run: |
             echo variable value is $MY_SECRET
             ls /root
-            rm /root/readme-scraper # temporarily so I can test if everything works
-            ls /root
+            #rm /root/readme-scraper # temporarily so I can test if everything works
+            #ls /root
 
       ## if changes get made to the script this will always fetch the
       ## newest version. If you fetch script from within Dockerfile you need to
       ## update the container and push it to registry each time you do make
       ## changes to the script.
-        - name: Fetch Script
-          run: |
-            ## use wget cause alpine comes with it but not with curl
-            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
-            #ls /root
-            # echo not here
-            ls
-            cat /root/readme-scraper
-            #chmod u+x /root/.local/bin/readme-scraper
-
-            #find . -type f -name 'readme-scraper'
-        - name: Give Script Permissions
-          run: chmod u+x /root/readme-scraper
-
         - name: Exec Script
-          run: /root/./readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
+          run: |
+            cat /root/.local/bin/readme-scraper
+            readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
 
         - name: echo template
           run: echo /root/templates/README.md.tpl
