@@ -53,6 +53,7 @@ jobs:
             chmod u+x /root/.local/bin/readme-scraper
             #chmod u+x /__w/root/.local/bin/readme-scraper
             echo 3
+            cat /root/.local/bin/foominator
             ## issue seems curl is not installed, means it is not being
             ##fetched from docker app but probably from ubuntu image
             ##TODO method 1: make docker container so if you run it, it automatically executes readme-scraper

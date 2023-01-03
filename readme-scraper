@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 declare wakaKey="$WAKATIME_API_KEY"
+curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.' > foo
 #source api-key #Temporary for testing the script
 # dependencies: bash, sed, jq, printf, ed, perl
 declare preTemplateFile="$1"
 declare templateFile="$2"
-
 _main() {
   ## Find all the html comment tags and put them in an array. 
   local -a findComments=( "languages" "editors" "os" "projects" "timezone")
