@@ -41,15 +41,13 @@ jobs:
         - name: fetch Script
           run: |
             echo 0
-            #mkdir -p /root/.local/bin
+            mkdir -p /root/.local/bin
+            rm /root/.local/bin/readme-scraper
             echo 1
             pwd
             echo 2
             #ln -sf /__w/readme-scraper/readme-scraper/readme-scraper /root/.local/bin
-            #wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin
-            ls /root/.local/bin
-            cd /root/.local/bin
-            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper || pwd
+            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin
             chmod u+x /__w/root/.local/bin/readme-scraper
             echo 3
             ## issue seems curl is not installed, means it is not being
