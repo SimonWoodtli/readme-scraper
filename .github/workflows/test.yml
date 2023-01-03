@@ -63,6 +63,9 @@ jobs:
             cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
             echo 5
             readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+            echo 6
+            cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
+            cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
 
 
       ## if changes get made to the script this will always fetch the
