@@ -15,8 +15,10 @@ _main() {
   ## Loop over all possible comments from findComments and check if they
   ## can be found in preTemplateFile, if yes add them to foundComments
   for findComment in "${findComments[@]}"; do
-    checkCommentStartLine=$(grep -n '<!--'"$findComment"'-start-->' "$preTemplateFile" | cut --characters=1,2)
-    checkCommentEndLine=$(grep -n '<!--'"$findComment"'-end-->' "$preTemplateFile" | cut --characters=1,2)
+    #checkCommentStartLine=$(grep -n '<!--'"$findComment"'-start-->' "$preTemplateFile" | cut --characters=1,2)
+    checkCommentStartLine=$(grep -n '<!--'"$findComment"'-start-->' "$preTemplateFile" | cut -c1,2)
+    #checkCommentEndLine=$(grep -n '<!--'"$findComment"'-end-->' "$preTemplateFile" | cut --characters=1,2)
+    checkCommentEndLine=$(grep -n '<!--'"$findComment"'-end-->' "$preTemplateFile" | cut -c1,2)
     if [[ $checkCommentStartLine -ne 0 && $checkCommentEndLine -ne 0 ]]; then
       foundComments+=( "$findComment" )
     fi
