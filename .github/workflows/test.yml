@@ -47,6 +47,7 @@ jobs:
             echo 2
             #ln -sf /__w/readme-scraper/readme-scraper/readme-scraper /root/.local/bin
             #wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin
+            cd /root/.local/bin
             wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
             chmod u+x /__w/root/.local/bin/readme-scraper
             echo 3
