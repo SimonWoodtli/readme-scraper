@@ -29,15 +29,14 @@ jobs:
           run: |
             echo variable value is $MY_SECRET
             echo 0
-            ls /root
+            ls /root #root only gets mounted if options: -v ${{ github.workspace }}:/root 
             echo 1
             pwd
             echo 2
             ls /__w/readme-scraper/readme-scraper
             echo 3
-            cat /root/readme-scraper
-            #rm /root/readme-scraper # temporarily so I can test if everything works
-            #ls /root
+            #cat /root/readme-scraper #this only works if mounted with options: -v ${{ github.workspace }}:/root 
+            cat /__w/readme-scraper/readme-scraper/readme-scraper
         - name: fetch Script
           run: |
             echo y
