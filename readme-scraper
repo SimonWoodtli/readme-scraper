@@ -178,7 +178,8 @@ _printHtmlBlock() {
   local commentArg="$1"
   #printf "%s\n" "/<!--"${commentArg}"-start-->/r buffer" w
   ## Add new API data to preTemplateFile
-  printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed -s "$preTemplateFile"
+  #printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed -s "$preTemplateFile"
+  printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed "$preTemplateFile"
   #perl -i -0777pe "s/<!--${commentArg}-start-->\n<!--${commentArg}-end-->/<!--${commentArg}-start-->\nhello world\n  <!--${commentArg}-end-->/s" "$preTemplateFile"
   ## Update new api content into templateFile
   ## TODO avoid cat/echo use here strings
