@@ -144,6 +144,7 @@ _createHtmlBlock() {
     ##https://stackoverflow.com/questions/27557146/assigning-one-variable-to-another-in-bash#27557194
     htmlBlock+='
 <span>'"${filterDataNameArray["${commentArg}Name$i"]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataTextArray["${commentArg}Text$i"]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataPercentArray["${commentArg}Percent$i"]}%"'</span>'
+    echo "$htmlBlock"
     ##debug
     #echo $htmlBlock
     #echo "${htmlBlock}"
@@ -168,8 +169,8 @@ _printHtmlBlocks() {
   #case for it
   for foundComment in "${foundComments[@]}"; do
     _createHtmlBlock $foundComment
-    echo $foundComment
-    echo "$htmlBlock"
+    #echo $foundComment
+    #echo "$htmlBlock"
     _printHtmlBlock $foundComment
     _cleanUpBuffer
   done
