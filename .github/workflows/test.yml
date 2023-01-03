@@ -64,7 +64,8 @@ jobs:
             echo 5
             readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
             echo foo
-            cat /root/.local/bin/foominator
+            #cat /root/.local/bin/foominator
+            cat /__w/readme-scraper/readme-scraper/foominator
             echo 6
             cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
             cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
