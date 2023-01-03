@@ -24,7 +24,10 @@ jobs:
     steps:
         - name: Checkout Project
           uses: actions/checkout@v2
-
+          name: Install Programs
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y perl
         - name: echo stuff
           run: |
             echo variable value is $MY_SECRET
