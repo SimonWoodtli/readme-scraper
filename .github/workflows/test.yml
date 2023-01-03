@@ -24,7 +24,7 @@ jobs:
     steps:
         - name: Checkout Project
           uses: actions/checkout@v2
-          name: Install Programs
+        - name: Install Programs
           run: |
             sudo apt-get update
             sudo apt-get install -y perl
