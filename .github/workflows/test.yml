@@ -1,11 +1,15 @@
+## Name of the Workflow
 name: CI to update github profile README.md                                              
+## Events to trigger Action:
 on:                                                                             
   push:                                                                         
   schedule:                                                                     
     # runs once per day at midnight                                             
     - cron: "0 0 * * *"                                                         
                                                                                 
+## Jobs groups a set of actions to get executed
 jobs:                                                                           
+  ## Name of first job/group with its actions
   build:                                                                   
     runs-on: ubuntu-latest                                                      
     container:
@@ -14,7 +18,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
         WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         MY_SECRET: ${{ secrets.MY_SECRET }}
-      options: -v ${{ github.workspace }}:/root
+      #options: -v ${{ github.workspace }}:/root
+
+    ## actual actions
     steps:
         - name: Checkout Project
           uses: actions/checkout@v2
@@ -22,33 +28,51 @@ jobs:
         - name: echo stuff
           run: |
             echo variable value is $MY_SECRET
-            ls /root
-            rm /root/readme-scraper # temporarily so I can test if everything works
-            ls /root
+            echo 0
+            ls /root #root only gets mounted if options: -v ${{ github.workspace }}:/root 
+            echo 1
+            pwd
+            echo 2
+            ls /__w/readme-scraper/readme-scraper
+            echo 3
+            #cat /root/readme-scraper #this only works if mounted with options: -v ${{ github.workspace }}:/root 
+            cat /__w/readme-scraper/readme-scraper/readme-scraper
+            #curl -LJ https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -o foo || echo no
+        - name: fetch Script
+          run: |
+            echo 0
+            mkdir -p /root/.local/bin
+            rm /root/.local/bin/readme-scraper
+            echo 1
+            pwd
+            echo 2
+            #ln -sf /__w/readme-scraper/readme-scraper/readme-scraper /root/.local/bin
+            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin
+            chmod u+x /root/.local/bin/readme-scraper
+            #chmod u+x /__w/root/.local/bin/readme-scraper
+            echo 3
+            ## issue seems curl is not installed, means it is not being
+            ##fetched from docker app but probably from ubuntu image
+            ##TODO method 1: make docker container so if you run it, it automatically executes readme-scraper
+            ## because in the docker container I have dependencies installed
+            ##TODO method 2: rewrite docker container readme-scraper needs wget instead of curl
+            readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+            echo 2
+            cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+
 
       ## if changes get made to the script this will always fetch the
       ## newest version. If you fetch script from within Dockerfile you need to
       ## update the container and push it to registry each time you do make
       ## changes to the script.
-        - name: Fetch Script
-          run: |
-            ## use wget cause alpine comes with it but not with curl
-            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper
-            #ls /root
-            # echo not here
-            ls
-            cat /root/readme-scraper
-            #chmod u+x /root/.local/bin/readme-scraper
-
-            #find . -type f -name 'readme-scraper'
-        - name: Give Script Permissions
-          run: chmod u+x /root/readme-scraper
-
-        - name: Exec Script
-          run: /root/./readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
-
-        - name: echo template
-          run: echo /root/templates/README.md.tpl
+      #- name: Exec Script
+      #    run: |
+      #      find . -type f -name 'readme-scraper'
+      #      cat /__w/root/.local/bin/readme-scraper
+      #      readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
+      #
+      #  - name: echo template
+      #    run: cat /root/templates/README.md.tpl
 
       ## run docker with `readme-scraper` script
       #- name: Run Docker container to render template to README.md.tpl
