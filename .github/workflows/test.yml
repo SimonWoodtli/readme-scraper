@@ -48,7 +48,8 @@ jobs:
             echo 2
             #ln -sf /__w/readme-scraper/readme-scraper/readme-scraper /root/.local/bin
             wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin
-            chmod u+x /__w/root/.local/bin/readme-scraper
+            chmod u+x /root/.local/bin/readme-scraper
+            #chmod u+x /__w/root/.local/bin/readme-scraper
             echo 3
             ## issue seems curl is not installed, means it is not being
             ##fetched from docker app but probably from ubuntu image
