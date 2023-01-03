@@ -1,8 +1,6 @@
 #!/usr/bin/bash
-#declare wakaKey="$WAKATIME_API_KEY"
-source api-key #Temporary for testing the script
-#wget -O - https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.'
-#curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.'
+declare wakaKey="$WAKATIME_API_KEY"
+#source api-key #Temporary for testing the script
 # dependencies: bash, sed, jq, printf, ed
 declare preTemplateFile="$1"
 declare templateFile="$2"
@@ -30,7 +28,8 @@ _main() {
 
 _fetchData() {
   local fetchWakaData
-  fetchWakaData=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
+  #fetchWakaData=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
+  fetchWakaData=$(wget -O - https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
   _filterData
 }
 
