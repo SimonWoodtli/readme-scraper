@@ -56,9 +56,11 @@ jobs:
             ##TODO method 1: make docker container so if you run it, it automatically executes readme-scraper
             ## because in the docker container I have dependencies installed
             ##TODO method 2: rewrite docker container readme-scraper needs wget instead of curl
-            readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
-            echo 2
+            echo 4
+            cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
             cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+            echo 5
+            readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
 
 
       ## if changes get made to the script this will always fetch the
