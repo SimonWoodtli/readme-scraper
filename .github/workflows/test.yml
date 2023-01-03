@@ -41,7 +41,7 @@ jobs:
         - name: fetch Script
           run: |
             echo 0
-            mkdir -p /root/.local/bin
+            #mkdir -p /root/.local/bin
             echo 1
             pwd
             echo 2
