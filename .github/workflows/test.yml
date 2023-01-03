@@ -28,8 +28,11 @@ jobs:
         - name: echo stuff
           run: |
             echo variable value is $MY_SECRET
+            echo 0
             ls /root
+            echo 1
             pwd
+            echo 2
             cat /root/readme-scraper
             #rm /root/readme-scraper # temporarily so I can test if everything works
             #ls /root
@@ -67,7 +70,7 @@ jobs:
             readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
 
         - name: echo template
-          run: echo /root/templates/README.md.tpl
+          run: cat /root/templates/README.md.tpl
 
       ## run docker with `readme-scraper` script
       #- name: Run Docker container to render template to README.md.tpl
