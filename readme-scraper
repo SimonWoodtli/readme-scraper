@@ -1,7 +1,8 @@
 #!/usr/bin/bash
-declare wakaKey="$WAKATIME_API_KEY"
-#source api-key #Temporary for testing the script
-wget -O - https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.'
+#declare wakaKey="$WAKATIME_API_KEY"
+source api-key #Temporary for testing the script
+#wget -O - https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.'
+#curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.'
 # dependencies: bash, sed, jq, printf, ed
 declare preTemplateFile="$1"
 declare templateFile="$2"
@@ -136,11 +137,12 @@ _createHtmlBlock() {
   ##TODO if argument is timezone create if statement -> no loop needed
   ##just a one liner and exit out of this function after that
   for ((i = 0 ; i < "${filterDataLinesArray["${commentArg}NameLines"]}" ; i++)); do
+    #echo ${filterDataNameArray["languagesName$i"]}
     ## indirectly refer to variables to append more content
     ## ${commentArg}HtmlBlock+= => doesn't work as an assignment won't accept $
     ##https://stackoverflow.com/questions/27557146/assigning-one-variable-to-another-in-bash#27557194
     htmlBlock+='
-<span>'"${filterDataNameArray[""${commentArg}"Name"$i""]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataTextArray[""${commentArg}"Text"$i""]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataPercentArray[""${commentArg}"Percent"$i""]}%"'</span>'
+<span>'"${filterDataNameArray["${commentArg}Name$i"]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataTextArray["${commentArg}Text$i"]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataPercentArray["${commentArg}Percent$i"]}%"'</span>'
     ##debug
     #echo $htmlBlock
     #echo "${htmlBlock}"
@@ -173,37 +175,49 @@ _printHtmlBlocks() {
 
 _printHtmlBlock() {
   local commentArg="$1"
+  #printf "%s\n" "/<!--"${commentArg}"-start-->/r buffer" w
   ## Add new API data to preTemplateFile
-  printf "%s\n" "/<!--"${commentArg}"-start-->/r buffer" w  | ed -s "$preTemplateFile"
+  printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed -s "$preTemplateFile"
+  #perl -i -0777pe "s/<!--${commentArg}-start-->\n<!--${commentArg}-end-->/<!--${commentArg}-start-->\nhello world\n  <!--${commentArg}-end-->/s" "$preTemplateFile"
   ## Update new api content into templateFile
   ## TODO avoid cat/echo use here strings
   cat "$preTemplateFile" > "$templateFile"
 }
 
 _cleanUpTemplates() {
+  for foundComment in "${foundComments[@]}"; do
+    ## cleanup comments from templateFile
+    sed -i "/<!--${foundComment}-start-->/d" "$templateFile"
+    sed -i "/<!--${foundComment}-end-->/d" "$templateFile"
+    ## cleanup content between comments
+    perl -i -0777pe "s/<!--${foundComment}-start-->.*<!--${foundComment}-end-->/<!--${foundComment}-start-->\n  <!--${foundComment}-end-->/s" "$preTemplateFile"
+  done
+
+  ## Method 1:
   ## Function to edit templateFile (remove html comment) and preTemplateFile (remove content)
   ## store line number from start/end tag
-  local -i findCommentStartLine
-  local -i findCommentEndLine
+  #local -i findCommentStartLine
+  #local -i findCommentEndLine
   
   ## Loop over comment array and for earch comment
-  for foundComment in "${foundComments[@]}"; do
+  #for foundComment in "${foundComments[@]}"; do
     # Grab html comment start and finish line number
     #echo $foundComment
-    findCommentStartLine=$(grep -n '<!--'"$foundComment"'-start-->' "$preTemplateFile" | cut --characters=1,2)
-    findCommentEndLine=$(grep -n '<!--'"$foundComment"'-end-->' "$preTemplateFile" | cut --characters=1,2)
+    #findCommentStartLine=$(grep -n '<!--'"$foundComment"'-start-->' "$preTemplateFile" | cut --characters=1,2)
+    #echo "$findCommentStartLine"
+    #findCommentEndLine=$(grep -n '<!--'"$foundComment"'-end-->' "$preTemplateFile" | cut --characters=1,2)
     ## If findCommentStartLine gives back 0 skip sed commands
-    if [[ $findCommentStartLine -ne 0 && $findCommentEndLine -ne 0 ]]; then
+    #if [[ $findCommentStartLine -ne 0 && $findCommentEndLine -ne 0 ]]; then
       ## Delete html comment tags from templateFile
-      ##FIXME only deletes the first html comment but the rest stays
-      sed -i "${findCommentStartLine}d;${findCommentEndLine}d" "$templateFile"
+      ##FIXME only delete the first html comment but the rest stays
+      #sed -i "${findCommentStartLine}d;${findCommentEndLine}d" "$templateFile"
       ## Adjust num to match content
-      ((findCommentStartLine=findCommentStartLine+1))
-      ((findCommentEndLine=findCommentEndLine-1))
+      #((findCommentStartLine=findCommentStartLine+1))
+      #((findCommentEndLine=findCommentEndLine-1))
       ## Delete content between html comment tags from preTemplateFile
-      sed -i "$findCommentStartLine,${findCommentEndLine}d" "$preTemplateFile"
-    fi
-  done
+      #sed -i "$findCommentStartLine,${findCommentEndLine}d" "$preTemplateFile"
+    #fi
+  #done
 }
 
 _cleanUpBuffer() {
