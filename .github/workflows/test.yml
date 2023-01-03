@@ -53,17 +53,18 @@ jobs:
             chmod u+x /root/.local/bin/readme-scraper
             #chmod u+x /__w/root/.local/bin/readme-scraper
             echo 3
-            cat /root/.local/bin/foominator
             ## issue seems curl is not installed, means it is not being
             ##fetched from docker app but probably from ubuntu image
             ##TODO method 1: make docker container so if you run it, it automatically executes readme-scraper
             ## because in the docker container I have dependencies installed
             ##TODO method 2: rewrite docker container readme-scraper needs wget instead of curl
             echo 4
-            cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
-            cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+            #cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
+            #cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
             echo 5
             readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+            echo foo
+            cat /root/.local/bin/foominator
             echo 6
             cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
             cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
