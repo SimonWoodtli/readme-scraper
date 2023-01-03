@@ -1,6 +1,6 @@
 #!/usr/bin/bash
-declare wakaKey="$WAKATIME_API_KEY"
-#source api-key #Temporary for testing the script
+#declare wakaKey="$WAKATIME_API_KEY"
+source api-key #Temporary for testing the script
 # dependencies: bash, sed, jq, printf, ed
 declare preTemplateFile="$1"
 declare templateFile="$2"
@@ -178,9 +178,9 @@ _printHtmlBlock() {
   local commentArg="$1"
   #printf "%s\n" "/<!--"${commentArg}"-start-->/r buffer" w
   ## Add new API data to preTemplateFile
-  #printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed -s "$preTemplateFile"
-  printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed "$preTemplateFile"
-  #perl -i -0777pe "s/<!--${commentArg}-start-->\n<!--${commentArg}-end-->/<!--${commentArg}-start-->\nhello world\n  <!--${commentArg}-end-->/s" "$preTemplateFile"
+  printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed -s "$preTemplateFile"
+  #printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed "$preTemplateFile"
+  perl -i -0777pe "s/<!--${commentArg}-start-->\n<!--${commentArg}-end-->/<!--${commentArg}-start-->\n"$htmlBlock"\n  <!--${commentArg}-end-->/s" "$preTemplateFile"
   ## Update new api content into templateFile
   ## TODO avoid cat/echo use here strings
   cat "$preTemplateFile" > "$templateFile"
