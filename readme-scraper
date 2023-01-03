@@ -30,8 +30,8 @@ _main() {
 
 _fetchData() {
   local fetchWakaData
-  #fetchWakaData=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
-  fetchWakaData=$(wget -O - https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
+  fetchWakaData=$(curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
+  #fetchWakaData=$(wget -O - https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.')
   _filterData
 }
 

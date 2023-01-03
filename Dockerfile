@@ -10,6 +10,7 @@ ENV PATH=/root/.local/bin:$PATH
 RUN apk add --update \
   bash \
   jq
+##TODO IMPORTANT!!! add curl and perl too they don't come with alpine
 ## symlink bash
 RUN ln -sf /bin/bash /usr/bin/bash
 ## create dir
