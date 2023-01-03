@@ -37,6 +37,7 @@ jobs:
             echo 3
             #cat /root/readme-scraper #this only works if mounted with options: -v ${{ github.workspace }}:/root 
             cat /__w/readme-scraper/readme-scraper/readme-scraper
+            curl -LJ https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -o foo || echo no
         - name: fetch Script
           run: |
             echo y
@@ -44,6 +45,8 @@ jobs:
             echo 0
             ln -sf /__w/readme-scraper/readme-scraper/readme-scraper /root/.local/bin
             echo 1
+            ## issue seems curl is not installed, means it is not being
+            ##fetched from docker app but probably from ubuntu image
             readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
             echo 2
             cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
