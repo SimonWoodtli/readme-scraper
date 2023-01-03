@@ -18,7 +18,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
         WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         MY_SECRET: ${{ secrets.MY_SECRET }}
-      options: -v ${{ github.workspace }}:/root
+      #options: -v ${{ github.workspace }}:/root
 
     ## actual actions
     steps:
@@ -40,6 +40,8 @@ jobs:
             #ls /root
         - name: fetch Script
           run: |
+            echo y
+            mkdir -p /root/.local/bin
             echo 0
             ln -sf /__w/readme-scraper/readme-scraper/readme-scraper /root/.local/bin
             echo 1
