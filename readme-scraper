@@ -1,6 +1,6 @@
 #!/usr/bin/bash
-#declare wakaKey="$WAKATIME_API_KEY"
-source api-key #Temporary for testing the script
+declare wakaKey="$WAKATIME_API_KEY"
+#source api-key #Temporary for testing the script
 # dependencies: bash, sed, jq, printf, ed
 declare preTemplateFile="$1"
 declare templateFile="$2"
