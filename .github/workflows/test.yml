@@ -11,62 +11,43 @@ on:
 jobs:                                                                           
   ## Name of first job/group with its actions
   build:                                                                   
+    ## used VM
     runs-on: ubuntu-latest                                                      
+    ## Docker container to be pulled, the following steps are executed
+    ## within running docker container and busybox shell (cause Alpine)
     container:
-      image: simonwoodtli/readme-scraper:latest
+      image: simonwoodtli/readme-writer:latest
       env:
+        ## Github Secrets to be passed into the Container as env. variables
         GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
         WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         MY_SECRET: ${{ secrets.MY_SECRET }}
+          ## If you don't want to use actions/checkout@v2 this is an
+          ## alternative to mount content of the repo into docker.
+          ## here it will mount it to /root
       #options: -v ${{ github.workspace }}:/root
-
     ## actual actions
     steps:
+        ## 1. checkout mounts the content of the repo into the github
+        ## action, if you use a docker container like here it will mount it
+        ## in /__w/nameOfRepo/nameOfRepo
         - name: Checkout Project
           uses: actions/checkout@v2
-        - name: Install Programs
+        ## 2. run script
+        - name: Run Script
           run: |
-            apk add perl curl
-        - name: echo stuff
-          run: |
-            echo variable value is $MY_SECRET
-            echo 0
-            ls /root #root only gets mounted if options: -v ${{ github.workspace }}:/root 
-            echo 1
-            pwd
-            echo 2
-            ls /__w/readme-scraper/readme-scraper
-            echo 3
-            #cat /root/readme-scraper #this only works if mounted with options: -v ${{ github.workspace }}:/root 
-            cat /__w/readme-scraper/readme-scraper/readme-scraper
-            #curl -LJ https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -o foo || echo no
-        - name: fetch Script
-          run: |
-            echo 0
-            cat /root/.local/bin/readme-scraper
-            mkdir -p /root/.local/bin
-            rm /root/.local/bin/readme-scraper
-            echo 1
-            pwd
-            echo 2
-            #ln -sf /__w/readme-scraper/readme-scraper/readme-scraper /root/.local/bin
-            wget https://raw.githubusercontent.com/SimonWoodtli/readme-scraper/main/readme-scraper -P /root/.local/bin
-            chmod u+x /root/.local/bin/readme-scraper
-            #chmod u+x /__w/root/.local/bin/readme-scraper
-            echo 3
-            ## issue seems curl is not installed, means it is not being
-            ##fetched from docker app but probably from ubuntu image
-            ##TODO method 1: make docker container so if you run it, it automatically executes readme-scraper
-            ## because in the docker container I have dependencies installed
-            ##TODO method 2: rewrite docker container readme-scraper needs wget instead of curl
-            echo 4
-            #cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
-            #cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
-            echo 5
             readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
-            echo 6
+            echo 1
             cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
+            echo 2
             cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+        - name: Push
+          run: |
+            git config user.name readme-bot 🤖
+            git config user.email actions@github.com
+            git add .
+            git commit -m "📝 update auto-generated README.md"
+            git push origin main
 
 
       ## if changes get made to the script this will always fetch the
@@ -110,10 +91,3 @@ jobs:
           #template: "templates/preTemplateReadme.md.tpl"                                   
           #writeTo: "templates/README.md.tpl"                                                  
                                                                                 
-# - name: Push
-# run: |
-# git config user.name readme-bot 🤖
-# git config user.email actions@github.com
-# git add .
-# git commit -m "📝 TEST: update auto-generated README.md"
-# git push origin main
