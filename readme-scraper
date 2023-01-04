@@ -1,7 +1,7 @@
 #!/usr/bin/bash
-declare wakaKey="$WAKATIME_API_KEY"
+#declare wakaKey="$WAKATIME_API_KEY"
 #curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.'
-#source api-key #Temporary for testing the script
+source api-key #Temporary for testing the script
 # dependencies: bash, sed, jq, printf, ed, perl
 declare preTemplateFile="$1"
 declare templateFile="$2"
@@ -134,6 +134,7 @@ _createHtmlBlock() {
   ##TODO create clock emoji according to timezone
   local timezoneHtmlBlock='<h4>🕐 Timezone:</h4>'
   ## Indirectly reference to assign variables in loop.
+  #local -n htmlBlock=${commentArg}HtmlBlock
   local -n htmlBlock=${commentArg}HtmlBlock
   ##TODO if argument is timezone create if statement -> no loop needed
   ##just a one liner and exit out of this function after that
@@ -144,7 +145,6 @@ _createHtmlBlock() {
     ##https://stackoverflow.com/questions/27557146/assigning-one-variable-to-another-in-bash#27557194
     htmlBlock+='
 <span>'"${filterDataNameArray["${commentArg}Name$i"]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataTextArray["${commentArg}Text$i"]}"'</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>'"${filterDataPercentArray["${commentArg}Percent$i"]}%"'</span>'
-    echo "$htmlBlock"
     ##debug
     #echo $htmlBlock
     #echo "${htmlBlock}"
@@ -153,40 +153,41 @@ _createHtmlBlock() {
     #echo ${filterDataNameArray[languagesName0]}
     #echo ${filterDataNameArray[languagesName1]}
   done
-  _writeBuffer $commentArg
+  echo "$htmlBlock"
 }
-_writeBuffer() {
-  #local commentArg="$1"
-  #local -n htmlBlock=${commentArg}HtmlBlock
-  cat <<< "$htmlBlock" > buffer
-  #echo ""${commentArg}"HtmlBlock" > buffer
-}
+## TODO make _printDataLanguages to generic _printData and print all the
+## Data strings that are defined in the comment array
+
 _printHtmlBlocks() {
-  ## TODO make _printDataLanguages to generic _printData and print all the
-  ## Data strings that are defined in the comment array
-
-  ##TODO Create loop according to $foundComments array better yet create
-  #case for it
   for foundComment in "${foundComments[@]}"; do
-    _createHtmlBlock $foundComment
-    #echo $foundComment
-    #echo "$htmlBlock"
-    _printHtmlBlock $foundComment
-    _cleanUpBuffer
-  done
-  _cleanUpTemplates
-}
+    htmlBlock="$(_createHtmlBlock $foundComment)"
+    perl -i -0777pe "s#<!--${foundComment}-start-->\n<!--${foundComment}-end-->#<!--${foundComment}-start-->\n${htmlBlock}\n  <!--${foundComment}-end-->#s" "$preTemplateFile"
+    #perl -i -0777pe "s/<!--languages-start-->\n<!--languages-end-->/<!--languages-start-->\nThis is a test\n  <!--languages-end-->/s" "$preTemplateFile"
+    #perl "-i -0777pe" "s/<!--languages-start-->\n<!--languages-end-->/<!--languages-start-->\nCONTENT_GOES_HERE\n<!--languages-end-->/s" templates/preTemplateReadme.md.tpl
+    #perl -i -pe "s/<!--languages-start-->\n<!--languages-end-->/<!--languages-start-->\nCONTENT_GOES_HERE\n<!--languages-end-->/s" "$preTemplateFile"
+    #perl -i -pe "s/hello\nworld/hello\nCONTENT_GOES_HERE\nworld/s" jesus
+  #perl -i -0777pe "s|<!--languages-start-->\n<!--languages-end-->|<!--languages-start-->\n${foo}\n<!--languages-end-->|s" "$preTemplateFile"
+  #perl -i -0777pe "s|<!--languages-start-->\n<!--languages-end-->|<!--languages-start-->\n${htmlBlock}\n<!--languages-end-->|s" templates/jesus
+  #perl -i -0777pe "s|<!--languages-start-->\s*<!--languages-end-->|<!--languages-start-->\n${htmlBlock}\n<!--languages-end-->|s" templates/jesus
+  #
+  #perl -i -0777pe "s|<!--${foundComment}-start-->\s*<!--${foundComment}-end-->|<!--${foundComment}-start-->\n${htmlBlock}\n  <!--${foundComment}-end-->|s" templates/jesus
+  #
+  #
+  ## perl explained: https://github.com/SimonWoodtli/zet/tree/main/20230104141626
+  perl -i -0777pe "s|<!--${foundComment}-start-->\s*<!--${foundComment}-end-->|<!--${foundComment}-start-->\n${htmlBlock}\n  <!--${foundComment}-end-->|s" "$preTemplateFile"
 
-_printHtmlBlock() {
-  local commentArg="$1"
+  done
+  #cat "$preTemplateFile"
   #printf "%s\n" "/<!--"${commentArg}"-start-->/r buffer" w
   ## Add new API data to preTemplateFile
   #printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed -s "$preTemplateFile"
   #printf "%s\n" "/<!--${commentArg}-start-->/r buffer" w  | ed "$preTemplateFile"
-  perl -i -0777pe "s/<!--${commentArg}-start-->\n<!--${commentArg}-end-->/<!--${commentArg}-start-->\n"$htmlBlock"\n  <!--${commentArg}-end-->/s" "$preTemplateFile"
+  #perl -i -0777pe "s/<!--${commentArg}-start-->\n<!--${commentArg}-end-->/<!--${commentArg}-start-->\ntest\n<!--${commentArg}-end-->/s" "$preTemplateFile"
   ## Update new api content into templateFile
   ## TODO avoid cat/echo use here strings
   cat "$preTemplateFile" > "$templateFile"
+
+  _cleanUpTemplates
 }
 
 _cleanUpTemplates() {
@@ -225,10 +226,6 @@ _cleanUpTemplates() {
   #done
 }
 
-_cleanUpBuffer() {
-  ## TODO Find a better command to clean buffer file
-  echo "" > "$PWD/buffer"
-}
 
 _main
 

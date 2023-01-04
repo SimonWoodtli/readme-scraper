@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+foo='<h4> Languages:</h4>'
+#foo='hello world'
+#perl -i -0777pe "s/<!--languages-start-->\n<!--languages-end-->/<!--languages-start-->\n${foo}\n<!--languages-end-->/s" jesus
+#
+perl -i -0777pe "s|<!--languages-start-->\n<!--languages-end-->|<!--languages-start-->\n${foo}\n<!--languages-end-->|s" templates/jesus
+
+
+#perl -p -i -e "s#<!--languages-start-->\n<!--languages-end-->#'<h4>Languages:</h4>\n<ul>\n<li>English</li>\n<li>Spanish</li>\n</ul>'#s" jesus
