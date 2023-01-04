@@ -31,10 +31,10 @@ jobs:
         ## 1. checkout mounts the content of the repo into the github
         ## action, if you use a docker container like here it will mount it
         ## in /__w/nameOfRepo/nameOfRepo
-        - name: Checkout Project
+        - name: Checkout Project - Mount Repo into Docker Container
           uses: actions/checkout@v2
         ## 2. run script
-        - name: Run Script: Update README.md
+        - name: Run Script - Update README.md
           run: |
             readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
             echo 1
