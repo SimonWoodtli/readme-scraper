@@ -1,7 +1,7 @@
 #!/usr/bin/bash
-#declare wakaKey="$WAKATIME_API_KEY"
+declare wakaKey="$WAKATIME_API_KEY"
 #curl https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key="$wakaKey" | jq '.'
-source api-key #Temporary for testing the script
+#source api-key #Temporary for testing the script
 # dependencies: bash, sed, jq, printf, ed, perl
 declare preTemplateFile="$1"
 declare templateFile="$2"
