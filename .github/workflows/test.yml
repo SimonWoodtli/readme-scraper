@@ -33,6 +33,10 @@ jobs:
         ## in /__w/nameOfRepo/nameOfRepo
         - name: Checkout Project - Mount Repo into Docker Container
           uses: actions/checkout@v2
+        ## temporarily install git
+        - name: install pakackes
+          run: |
+            apk add git
         ## 2. run script
         - name: Run Script - Update README.md
           run: |
@@ -42,6 +46,7 @@ jobs:
             echo 2
             cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
       
+            ## requires git on docker container
         - name: Git Push Changes
           uses: stefanzweifel/git-auto-commit-action@v4
             #env:
