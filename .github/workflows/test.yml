@@ -43,6 +43,7 @@ jobs:
         - name: fetch Script
           run: |
             echo 0
+            cat /root/.local/bin/readme-scraper
             mkdir -p /root/.local/bin
             rm /root/.local/bin/readme-scraper
             echo 1
