@@ -25,6 +25,8 @@ jobs:
           ## If you don't want to use actions/checkout@v2 this is an
           ## alternative to mount content of the repo into docker.
           ## here it will mount it to /root
+          ##FIXME Methode 1: idea one use the option and see if /root/readme-scribe
+          #get mounted it mounts as a git repo
       #options: -v ${{ github.workspace }}:/root
     ## actual actions
     steps:
@@ -45,29 +47,31 @@ jobs:
             cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
             echo 2
             cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+        ##FIXME Method 2: git commands targeting /__w/readme-scribe folder
+        - name: Push
+          run: |
+            cd /__w/readme-scraper/readme-scraper/
+            git config user.name readme-bot 🤖
+            git config user.email actions@github.com
+            git add -A /__w/readme-scraper/readme-scraper
+            git commit -m "📝 update auto-generated README.md"
+            git push origin main
+
       
             ## requires git on docker container
-        - name: Git Push Changes
-          uses: stefanzweifel/git-auto-commit-action@v4
+            #- name: Git Push Changes
+            #uses: stefanzweifel/git-auto-commit-action@v4
             #env:
             #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            commit_message: 📝 update auto-generated README.md
-            branch: main
-            commit_user_name: readme-writer 🤖
-            commit_user_email: actions@github.com
-            commit_author: readme-writer 🤖 <actions@github.com>
+            #with:
+            #commit_message: 📝 update auto-generated README.md
+            #branch: main
+            #commit_user_name: readme-writer 🤖
+            #commit_user_email: actions@github.com
+            #commit_author: readme-writer 🤖 <actions@github.com>
 
               ## another push method: requires git to be installed in
               #docker container
-              #- name: Push
-              #run: |
-              #git config user.name readme-bot 🤖
-              #git config user.email actions@github.com
-              #git add .
-              #git commit -m "📝 update auto-generated README.md"
-              #git push origin main
-
 
       ## if changes get made to the script this will always fetch the
       ## newest version. If you fetch script from within Dockerfile you need to
