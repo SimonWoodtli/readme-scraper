@@ -30,15 +30,15 @@ jobs:
       #options: -v ${{ github.workspace }}:/root
     ## actual actions
     steps:
+        ## temporarily install git
+        - name: install pakackes
+          run: |
+            apk add git
         ## 1. checkout mounts the content of the repo into the github
         ## action, if you use a docker container like here it will mount it
         ## in /__w/nameOfRepo/nameOfRepo
         - name: Checkout Project - Mount Repo into Docker Container
           uses: actions/checkout@v2
-        ## temporarily install git
-        - name: install pakackes
-          run: |
-            apk add git
         ## 2. run script
         - name: Run Script - Update README.md
           run: |
@@ -50,9 +50,7 @@ jobs:
         ##FIXME Method 2: git commands targeting /__w/readme-scribe folder
         - name: Push
           run: |
-            echo $GITHUB_WORKSPACE
-            pwd
-            cd /__w/readme-scraper/readme-scraper/
+            echo $GITHUB_WORKSPACE && pwd
             git config user.name readme-bot 🤖
             git config user.email actions@github.com
             git add -A /__w/readme-scraper/readme-scraper
