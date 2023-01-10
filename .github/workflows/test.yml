@@ -41,6 +41,7 @@ jobs:
             #cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
             #echo 2
             #cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+            git config --global --add safe.directory /__w/readme-scraper/readme-scraper
             echo 0
             pwd
             echo 1
