@@ -23,7 +23,6 @@ _main() {
     fi
   done
   [[ -n $foundComments ]] || exit 1
-
   _fetchData
 }
 
@@ -76,7 +75,6 @@ _filterData() {
     [[ ${filterDataLinesArray["$foundComment"NameLines]} -eq ${filterDataLinesArray["$foundComment"PercentLines]} && \
       ${filterDataLinesArray["$foundComment"NameLines]} -eq ${filterDataLinesArray["$foundComment"TextLines]} ]] || exit 2
   done
-
   ##TODO DRY create a function with this loop and allow changing data to
   ##be passed in function calls
   if grep -q 'languages' <<< "${foundComments[@]}"; then ## only use this if the elements in the array do not contain spaces!
@@ -156,7 +154,6 @@ _createHtmlBlock() {
 }
 ## TODO make _printDataLanguages to generic _printData and print all the
 ## Data strings that are defined in the comment array
-
 _printHtmlBlocks() {
   for foundComment in "${foundComments[@]}"; do
     htmlBlock="$(_createHtmlBlock $foundComment)"
@@ -188,7 +185,6 @@ _printHtmlBlocks() {
 
   _cleanUpTemplates
 }
-
 _cleanUpTemplates() {
   for foundComment in "${foundComments[@]}"; do
     ## cleanup comments from templateFile
@@ -224,8 +220,6 @@ _cleanUpTemplates() {
     #fi
   #done
 }
-
-
 _main
 
 ## Remember: Variables and sed are a bit tricky. Don't quote variables that have spaces!
