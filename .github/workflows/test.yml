@@ -33,9 +33,9 @@ jobs:
         ## 1. checkout mounts the content of the repo into the github
         ## action, if you use a docker container like here it will mount it
         ## in /__w/nameOfRepo/nameOfRepo
-        - name: Checkout Project - Mount Repo into Docker Container
-          uses: actions/checkout@v3
-          run: |
+        #- name: Checkout Project - Mount Repo into Docker Container
+        - uses: actions/checkout@v3
+        - run: |
             cat /root/.gitconfig
         ## 2. run script
         - name: Run Script - Update README.md
