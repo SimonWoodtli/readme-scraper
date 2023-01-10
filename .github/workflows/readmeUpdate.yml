@@ -2,43 +2,32 @@
 name: CI to update the README.md of your github profile
 ## Events to trigger Action:
 on:
+  ## If you make a manual push
   push:
   schedule:
-    # runs once per day at midnight
+    ## If it is midnight, cronjob runs once per day
     - cron: "0 0 * * *"
-
 ## Jobs groups a set of actions to get executed
 jobs:
   ## Name of first job/group with its actions
   build:
-    ## used VM
     runs-on: ubuntu-latest
     ## Docker container to be pulled, the following steps are executed
     ## within running docker container and busybox shell (cause Alpine)
     container:
       image: simonwoodtli/readme-writer:latest
+      ## Github Secrets to be passed to the Container as env. variables
       env:
-        ## Github Secrets to be passed into the Container as env. variables
         GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
         WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         MY_SECRET: ${{ secrets.MY_SECRET }}
-          ## If you don't want to use actions/checkout@v2 this is an
-          ## alternative to mount content of the repo into docker.
-          ## here it will mount it to /root
-          ##FIXME Methode 1: idea one use the option and see if /root/readme-scribe
-          #get mounted it mounts as a git repo
-      #options: -v ${{ github.workspace }}:/root
-    ## actual actions
+    ## Actual actions
     steps:
       ## 1. checkout mounts the content of the repo into the github
       ## action, if you use a docker container like here it will mount it
-      ## in /__w/nameOfRepo/nameOfRepo
-      #- name: Checkout Project - Mount Repo into Docker Container
-      ##KNOWLEDGE: either have `- name:\nuses:` but you cant have `run:`
-      ## If you need uses and run together ommit `- name:`, and go with `- uses:\n- run:`
+      ## in $GITHUB_WORKSPACE which is /__w/nameOfRepo/nameOfRepo
       - uses: actions/checkout@v3
       - run: |
-          git config --global --add safe.directory /__w/readme-scraper/readme-scraper
         ##HOTFIX this is required until I figure out why there are two
         ## owners `ntp` and `root` in $GITHUB_WORKSPACE
         ## It also makes not much sense as github checkout action
@@ -47,80 +36,17 @@ jobs:
         ## no git repo errors, even though `ls -lah $GITHUB_WORKSPACE`
         ## clearly showed the .git repo so it wasn't an API download but
         ## the checkout action used a git clone.
+          git config --global --add safe.directory /__w/readme-scraper/readme-scraper
       ## 2. run script
       - name: Run Script - Update README.md
         run: |
-          readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
-      ##FIXME Method 2: git commands targeting /__w/readme-scribe folder
+          #readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+          readme-scraper templates/preTemplateReadme.md.tpl templates/README.md.tpl
+      ## 3. push update
       - name: Git Push updated README.md
         run: |
-          #echo $GITHUB_WORKSPACE && pwd
-          git config user.name readme-bot 🤖
+          git config user.name readme-writer 🤖
           git config user.email actions@github.com
-          git add -A /__w/readme-scraper/readme-scraper
+          git add .
           git commit -m "📝 update auto-generated README.md"
           git push origin main
-
-          #git config user.name readme-bot 🤖
-          #git config user.email actions@github.com
-          #git add .
-          #git commit -m "📝 update auto-generated README.md"
-          #git push origin main
-
-
-            ## requires git on docker container
-            #- name: Git Push Changes
-            #uses: stefanzweifel/git-auto-commit-action@v4
-            #env:
-            #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            #with:
-            #commit_message: 📝 update auto-generated README.md
-            #branch: main
-            #commit_user_name: readme-writer 🤖
-            #commit_user_email: actions@github.com
-            #commit_author: readme-writer 🤖 <actions@github.com>
-
-              ## another push method: requires git to be installed in
-              #docker container
-
-      ## if changes get made to the script this will always fetch the
-      ## newest version. If you fetch script from within Dockerfile you need to
-      ## update the container and push it to registry each time you do make
-      ## changes to the script.
-      #- name: Exec Script
-      #    run: |
-      #      find . -type f -name 'readme-scraper'
-      #      cat /__w/root/.local/bin/readme-scraper
-      #      readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
-      #
-      #  - name: echo template
-      #    run: cat /root/templates/README.md.tpl
-
-      ## run docker with `readme-scraper` script
-      #- name: Run Docker container to render template to README.md.tpl
-      ## mount github repo content to /root within docker
-      ## pass env variables/secrets into docker
-            ##FIXME docker-run-action can't pass secrets to docker
-            ## container, either don't use it or try it with Dockerfile
-            ## and put the env. variables in there before building
-            ## container
-            #--env my_secret=${{ env.MY_SECRET }}
-            #--env my_secret=${{ secrets.MY_SECRET }}
-            ##TODO!!!! use a Dockerfile and at build time pass in the
-            #env. variables this action does not support this feature!
-            ## exec script
-            #readme-scraper /root/templates/preTemplateReadme.md.tpl /root/templates/README.md.tpl
-            #echo readme-template
-            #cat /root/templates/README.md.tpl
-
-# - name: check content
-# run: |
-# echo template
-# cat /root/templates/README.md.tpl
-# echo pretemplate
-# cat /root/templates/preTemplateReadme.md.tpl
-
-        #with:
-          #template: "templates/preTemplateReadme.md.tpl"
-          #writeTo: "templates/README.md.tpl"
-
