@@ -36,7 +36,6 @@ jobs:
         #- name: Checkout Project - Mount Repo into Docker Container
         - uses: actions/checkout@v3
         - run: |
-            ls /root/.gitconfig
             ls -lah "$GITHUB_WORKSPACE"
         ## 2. run script
         - name: Run Script - Update README.md
