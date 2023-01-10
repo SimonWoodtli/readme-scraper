@@ -41,6 +41,7 @@ jobs:
             #cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
             #echo 2
             #cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+            pwd
             date > generated.txt
             git config user.name github-actions
             git config user.email github-actions@github.com
