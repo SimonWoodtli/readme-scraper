@@ -1,25 +1,25 @@
 ## Name of the Workflow
-name: CI to update github profile README.md                                              
+name: CI to update the README.md of your github profile
 ## Events to trigger Action:
-on:                                                                             
-  push:                                                                         
-  schedule:                                                                     
-    # runs once per day at midnight                                             
-    - cron: "0 0 * * *"                                                         
-                                                                                
+on:
+  push:
+  schedule:
+    # runs once per day at midnight
+    - cron: "0 0 * * *"
+
 ## Jobs groups a set of actions to get executed
-jobs:                                                                           
+jobs:
   ## Name of first job/group with its actions
-  build:                                                                   
+  build:
     ## used VM
-    runs-on: ubuntu-latest                                                      
+    runs-on: ubuntu-latest
     ## Docker container to be pulled, the following steps are executed
     ## within running docker container and busybox shell (cause Alpine)
     container:
       image: simonwoodtli/readme-writer:latest
       env:
         ## Github Secrets to be passed into the Container as env. variables
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}                    
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
         WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         MY_SECRET: ${{ secrets.MY_SECRET }}
           ## If you don't want to use actions/checkout@v2 this is an
@@ -34,29 +34,33 @@ jobs:
         ## action, if you use a docker container like here it will mount it
         ## in /__w/nameOfRepo/nameOfRepo
         #- name: Checkout Project - Mount Repo into Docker Container
+        ##KNOWLEDGE: either have `- name:\nuses:` but you cant have `run:`
+        ## If you need uses and run together ommit `- name:`, and go with `- uses:\n- run:`
+        - name: Checkout Project - Mount Repo into Docker Container
         - uses: actions/checkout@v3
         - run: |
-            #readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
-            #echo 1
-            #cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
-            #echo 2
-            #cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+          ##HOTFIX this is required until I figure out why there are two
+          ## owners `ntp` and `root` in $GITHUB_WORKSPACE
+          ## It also makes not much sense as github checkout action
+          ## already uses this safe.dir command itself, oh well...
+          ## debugging was weird until I used `git remote -v` I just got
+          ## no git repo errors, even though `ls -lah $GITHUB_WORKSPACE`
+          ## clearly showed the .git repo so it wasn't an API download but
+          ## the checkout action used a git clone.
             git config --global --add safe.directory /__w/readme-scraper/readme-scraper
-            echo 0
-            pwd
-            echo 1
-            ls -lah $GITHUB_WORKSPACE
-            echo 2
-            git remote -v
-            echo 3
-            git config --list
-            echo 4
-            date > generated.txt
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git add .
-            git commit -m "generated"
-            git push
+        ## 2. run script
+        - name: Run Script - Update README.md
+          run: |
+            readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
+        ##FIXME Method 2: git commands targeting /__w/readme-scribe folder
+        - name: Git Push updated README.md
+          run: |
+            #echo $GITHUB_WORKSPACE && pwd
+            git config user.name readme-bot 🤖
+            git config user.email actions@github.com
+            git add -A /__w/readme-scraper/readme-scraper
+            git commit -m "📝 update auto-generated README.md"
+            git push origin main
 
             #git config user.name readme-bot 🤖
             #git config user.email actions@github.com
@@ -64,7 +68,7 @@ jobs:
             #git commit -m "📝 update auto-generated README.md"
             #git push origin main
 
-      
+
             ## requires git on docker container
             #- name: Git Push Changes
             #uses: stefanzweifel/git-auto-commit-action@v4
@@ -117,7 +121,7 @@ jobs:
 # echo pretemplate
 # cat /root/templates/preTemplateReadme.md.tpl
 
-        #with:                                                                   
-          #template: "templates/preTemplateReadme.md.tpl"                                   
-          #writeTo: "templates/README.md.tpl"                                                  
-                                                                                
+        #with:
+          #template: "templates/preTemplateReadme.md.tpl"
+          #writeTo: "templates/README.md.tpl"
+
