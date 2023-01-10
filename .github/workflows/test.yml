@@ -36,8 +36,9 @@ jobs:
         #- name: Checkout Project - Mount Repo into Docker Container
         - uses: actions/checkout@v3
         - run: |
+            echo "$GITHUB_WORKSPACE"
             ls -lah "$GITHUB_WORKSPACE"
-            readme-scraper "$GITHUB_WORKSPACE/templates/preTemplateReadme.md.tpl $GITHUB_WORKSPACE/templates/README.md.tpl"
+            readme-scraper "/__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl"
             #echo 1
             #cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
             #echo 2
