@@ -26,17 +26,8 @@ jobs:
       ## 1. checkout mounts the content of the repo into the github
       ## action, if you use a docker container like here it will mount it
       ## in $GITHUB_WORKSPACE which is /__w/nameOfRepo/nameOfRepo
-      - uses: actions/checkout@v3
-      - run: |
-        ##HOTFIX this is required until I figure out why there are two
-        ## owners `ntp` and `root` in $GITHUB_WORKSPACE
-        ## It also makes not much sense as github checkout action
-        ## already uses this safe.dir command itself, oh well...
-        ## debugging was weird until I used `git remote -v` I just got
-        ## no git repo errors, even though `ls -lah $GITHUB_WORKSPACE`
-        ## clearly showed the .git repo so it wasn't an API download but
-        ## the checkout action used a git clone.
-          git config --global --add safe.directory /__w/readme-scraper/readme-scraper
+      - name: Checkout Project - Mount Repo into Docker Container
+        uses: actions/checkout@v3
       ## 2. run script
       - name: Run Script - Update README.md
         run: |
@@ -45,8 +36,19 @@ jobs:
       ## 3. push update
       - name: Git Push updated README.md
         run: |
+          ##HOTFIX
+          git config --global --add safe.directory /__w/readme-scraper/readme-scraper
           git config user.name readme-writer 🤖
           git config user.email actions@github.com
           git add .
           git commit -m "📝 update auto-generated README.md"
           git push origin main
+
+##HOTFIX explained: this is required until I figure out why there are two
+## owners `ntp` and `root` in $GITHUB_WORKSPACE
+## It also makes not much sense as github checkout action
+## already uses this safe.dir command itself, oh well...
+## debugging was weird until I used `git remote -v` I just got
+## no git repo errors, even though `ls -lah $GITHUB_WORKSPACE`
+## clearly showed the .git repo so it wasn't an API download but
+## the checkout action used a git clone.
