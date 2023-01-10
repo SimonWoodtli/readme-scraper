@@ -36,7 +36,6 @@ jobs:
         #- name: Checkout Project - Mount Repo into Docker Container
         ##KNOWLEDGE: either have `- name:\nuses:` but you cant have `run:`
         ## If you need uses and run together ommit `- name:`, and go with `- uses:\n- run:`
-        - name: Checkout Project - Mount Repo into Docker Container
         - uses: actions/checkout@v3
         - run: |
           ##HOTFIX this is required until I figure out why there are two
