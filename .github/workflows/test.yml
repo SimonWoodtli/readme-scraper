@@ -36,7 +36,8 @@ jobs:
         #- name: Checkout Project - Mount Repo into Docker Container
         - uses: actions/checkout@v3
         - run: |
-            cat /root/.gitconfig
+            ls /root/.gitconfig
+            ls -lah "$GITHUB_WORKSPACE"
         ## 2. run script
         - name: Run Script - Update README.md
           run: |
@@ -50,7 +51,6 @@ jobs:
           run: |
             git config user.name readme-bot 🤖
             git config user.email actions@github.com
-            cat /root/.gitconfig
             git add .
             git commit -m "📝 update auto-generated README.md"
             git push origin main
