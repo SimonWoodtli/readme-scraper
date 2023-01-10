@@ -48,7 +48,8 @@ jobs:
           run: |
             git config user.name readme-bot 🤖
             git config user.email actions@github.com
-            git add -A /__w/readme-scraper/readme-scraper
+            cat /root/.gitconfig
+            git add .
             git commit -m "📝 update auto-generated README.md"
             git push origin main
 
