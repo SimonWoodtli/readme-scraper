@@ -37,17 +37,11 @@ jobs:
         - uses: actions/checkout@v3
         - run: |
             ls -lah "$GITHUB_WORKSPACE"
-        ## 2. run script
-        - name: Run Script - Update README.md
-          run: |
-            readme-scraper /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl /__w/readme-scraper/readme-scraper/templates/README.md.tpl
-            echo 1
-            cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
-            echo 2
-            cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
-        ##FIXME Method 2: git commands targeting /__w/readme-scribe folder
-        - name: Push
-          run: |
+            readme-scraper "$GITHUB_WORKSPACE/templates/preTemplateReadme.md.tpl $GITHUB_WORKSPACE/templates/README.md.tpl"
+            #echo 1
+            #cat /__w/readme-scraper/readme-scraper/templates/preTemplateReadme.md.tpl
+            #echo 2
+            #cat /__w/readme-scraper/readme-scraper/templates/README.md.tpl
             git config user.name readme-bot 🤖
             git config user.email actions@github.com
             git add .
