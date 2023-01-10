@@ -50,7 +50,7 @@ jobs:
         ##FIXME Method 2: git commands targeting /__w/readme-scribe folder
         - name: Push
           run: |
-            echo $GITHUB_WORKSPACE && pwd
+            #echo $GITHUB_WORKSPACE && pwd
             git config user.name readme-bot 🤖
             git config user.email actions@github.com
             git add -A /__w/readme-scraper/readme-scraper

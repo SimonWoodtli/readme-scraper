@@ -3,7 +3,7 @@ FROM alpine:latest
 ENV PATH=/root/.local/bin:$PATH
 ## install dependencies
 RUN apk add --update \
-  bash jq curl perl
+  bash jq curl perl git
 ## symlink bash
 RUN ln -sf /bin/bash /usr/bin/bash
 ## create dir
