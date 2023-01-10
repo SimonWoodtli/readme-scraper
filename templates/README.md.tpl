@@ -45,32 +45,24 @@
   </a></p>
 
 <h4>💬 Languages:</h4>
-<span>sh</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>16 hrs 36 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>54.7%</span>
-<span>Markdown</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9 hrs 31 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>31.35%</span>
-<span>YAML</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr 31 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>5.0%</span>
-<span>Other</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr 6 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.64%</span>
-<span>Smarty</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.3%</span>
-<span>Vim Script</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>17 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.94%</span>
-<span>Perl</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.51%</span>
-<span>gitconfig</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>4 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.24%</span>
-<span>Docker</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.16%</span>
-<span>Text</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.14%</span>
-<span>Bash</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.02%</span>
-<span>conf</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.01%</span>
+<span>sh</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>4 hrs 52 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>38.67%</span>
+<span>Markdown</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3 hrs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>23.88%</span>
+<span>YAML</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 hrs 43 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>21.69%</span>
+<span>Smarty</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr 8 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9.06%</span>
+<span>Other</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>35 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>4.76%</span>
+<span>Perl</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1.23%</span>
+<span>Docker</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>5 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.69%</span>
+<span>Text</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.03%</span>
 <h4>🌱 Projects:</h4>
-<span>cmd-zet</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>15 hrs 14 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>50.2%</span>
-<span>readme-scraper</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>6 hrs 42 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>22.1%</span>
-<span>zet</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>6 hrs 2 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>19.88%</span>
-<span>Private</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 hr 7 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3.69%</span>
-<span>dotfiles</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>32 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1.8%</span>
-<span>Unknown Project</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>19 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1.07%</span>
-<span>SimonWoodtli</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>11 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.65%</span>
-<span>readme-scraper-action</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>8 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.49%</span>
-<span>vim-pandoc</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.13%</span>
+<span>readme-scraper</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>9 hrs 31 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>75.62%</span>
+<span>zet</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>2 hrs 59 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>23.71%</span>
+<span>Unknown Project</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>3 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.43%</span>
+<span>cmd-zet</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>1 min</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.21%</span>
+<span>dotfiles</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0 secs</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>0.04%</span>
 <h4>📝 Editors:</h4>
-<span>Vim</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>30 hrs 21 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>100.0%</span>
+<span>Vim</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>12 hrs 35 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>100%</span>
 <h4>💻 Operating Systems:</h4>
-<span>Linux</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>30 hrs 21 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>100.0%</span>
+<span>Linux</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>12 hrs 35 mins</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span>100%</span>
   
 </details>
 
