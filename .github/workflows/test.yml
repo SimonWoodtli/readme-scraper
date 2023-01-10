@@ -35,6 +35,7 @@ jobs:
         ## in /__w/nameOfRepo/nameOfRepo
         - name: Checkout Project - Mount Repo into Docker Container
           uses: actions/checkout@v3
+          run: cat /root/.gitconfig
         ## 2. run script
         - name: Run Script - Update README.md
           run: |
